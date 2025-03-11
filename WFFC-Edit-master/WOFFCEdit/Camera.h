@@ -13,8 +13,8 @@ class Camera
 {
 public:
 	//functions
-	void Initialise(InputCommands* Input);
-	void Update();
+	void Initialise();
+	void Update(InputCommands& Input);
 	void FocusOnObject(DirectX::SimpleMath::Vector3 objectPosition);
 
 	//position and rotation vectors
@@ -26,7 +26,7 @@ public:
 	DirectX::SimpleMath::Vector3 camUp;
 
 	DirectX::SimpleMath::Matrix view;	//view calculation
-	float sensitivity = 5.0f, moveSpeed = 3.0f;	//mouse sensitivity and movement speed
+	float sensitivity = 5.0f, moveSpeed = 1.5f;	//mouse sensitivity and movement speed
 
 private:
 	//internal functions

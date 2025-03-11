@@ -29,9 +29,9 @@ Game::Game()
 	m_camRotRate = 3.0;
 
 	//camera
-	m_camPosition.x = 0.0f;
-	m_camPosition.y = 3.7f;
-	m_camPosition.z = -3.5f;
+	camera.position.x = 0.0f;
+	camera.position.y = 3.7f;
+	camera.position.z = -3.5f;
 
 	m_camOrientation.x = 0;
 	m_camOrientation.y = 0;
@@ -84,6 +84,8 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	GetClientRect(window, &m_ScreenDimensions);
+
+	camera.Initialise();
 
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -162,7 +164,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);*/
-
+	/*
 	if (m_InputCommands.rightMouseDown)
 		RotateCamByMouse();
 	else
@@ -171,30 +173,31 @@ void Game::Update(DX::StepTimer const& timer)
 	//process input and update stuff
 	if (m_InputCommands.forward)
 	{	
-		m_camPosition += m_camLookDirection*m_movespeed;
+		camera.position += m_camLookDirection*m_movespeed;
 	}
 	if (m_InputCommands.back)
 	{
-		m_camPosition -= m_camLookDirection*m_movespeed;
+		camera.position -= m_camLookDirection*m_movespeed;
 	}
 	if (m_InputCommands.right)
 	{
-		m_camPosition += m_camRight*m_movespeed;
+		camera.position += m_camRight*m_movespeed;
 	}
 	if (m_InputCommands.left)
 	{
-		m_camPosition -= m_camRight*m_movespeed;
+		camera.position -= m_camRight*m_movespeed;
 	}
 
 	//update lookat point
-	m_camLookAt = m_camPosition + m_camLookDirection;
+	m_camLookAt = camera.position + m_camLookDirection;
 
 	//apply camera vectors
-    m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
+    camera.view = Matrix::CreateLookAt(camera.position, m_camLookAt, Vector3::UnitY);*/
 
-    m_batchEffect->SetView(m_view);
+	camera.Update(m_InputCommands);
+    m_batchEffect->SetView(camera.view);
     m_batchEffect->SetWorld(Matrix::Identity);
-	m_displayChunk.m_terrainEffect->SetView(m_view);
+	m_displayChunk.m_terrainEffect->SetView(camera.view);
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
 #ifdef DXTK_AUDIO
@@ -248,10 +251,11 @@ void Game::Render()
 		const XMVECTORF32 yaxis = { 0.f, 0.f, 512.f };
 		DrawGrid(xaxis, yaxis, g_XMZero, 512, 512, Colors::Gray);
 	}
+
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
+	std::wstring var = L"Cam X: " + std::to_wstring(camera.position.x) + L"Cam Z: " + std::to_wstring(camera.position.z);
 	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
 	m_sprites->End();
 
@@ -270,7 +274,7 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList[i].m_model->Draw(context, *m_states, local, camera.view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -685,9 +689,9 @@ int Game::MousePicking()
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
 		//Unproject the points on the near and far plane, with respect to the matrix we just created.
-		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, camera.view, local);
 
-		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, camera.view, local);
 
 		//turn the transformed points into our picking vector. 
 		XMVECTOR pickingVector = farPoint - nearPoint;

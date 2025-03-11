@@ -2,10 +2,8 @@
 #include <algorithm>
 #include "Game.h"
 
-void Camera::Initialise(InputCommands* Input)
+void Camera::Initialise()
 {
-	inputs = *Input;	//get reference to inputs (for WASD and mouse)
-
 	//default vectors
 	position.x = 0.0f;
 	position.y = 3.7f;
@@ -32,8 +30,10 @@ void Camera::Initialise(InputCommands* Input)
 	camRight.z = 0.0f;
 }
 
-void Camera::Update()
+void Camera::Update(InputCommands& Input)
 {
+	inputs = Input;	//get reference to inputs (for WASD and mouse)
+
 	MoveCamera();
 
 	//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
@@ -41,7 +41,7 @@ void Camera::Update()
 	if (inputs.rightMouseDown)
 		RotateCamera();
 	else
-		cameraStart;
+		cameraStart = true;
 
 	//update lookat point
 	lookAt = position + lookDirection;
