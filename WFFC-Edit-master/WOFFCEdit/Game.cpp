@@ -26,32 +26,11 @@ Game::Game()
 
 	//functional
 	m_movespeed = 0.30;
-	m_camRotRate = 3.0;
 
 	//camera
 	camera.position.x = 0.0f;
 	camera.position.y = 3.7f;
 	camera.position.z = -3.5f;
-
-	m_camOrientation.x = 0;
-	m_camOrientation.y = 0;
-	m_camOrientation.z = 0;
-
-	m_camLookAt.x = 0.0f;
-	m_camLookAt.y = 0.0f;
-	m_camLookAt.z = 0.0f;
-
-	m_camLookDirection.x = 0.0f;
-	m_camLookDirection.y = 0.0f;
-	m_camLookDirection.z = 1.0f;
-
-	m_camUp.x = 0;
-	m_camUp.y = 0;
-	m_camUp.z = 0;
-
-	m_camRight.x = 1.0f;
-	m_camRight.y = 0.0f;
-	m_camRight.z = 0.0f;
 }
 
 Game::~Game()
@@ -143,58 +122,9 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-	/*
-	//TODO  any more complex than this, and the camera should be abstracted out to somewhere else
-	//camera motion is on a plane, so kill the 7 component of the look direction
-	Vector3 planarMotionVector = m_camLookDirection;
-	planarMotionVector.y = 0.0;
-	if (m_InputCommands.rotRight)
-	{
-		m_camOrientation.y -= m_camRotRate;
-	}
-	if (m_InputCommands.rotLeft)
-	{
-		m_camOrientation.y += m_camRotRate;
-	}
-
-	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
-	m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
-	m_camLookDirection.Normalize();
-
-	//create right vector from look Direction
-	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);*/
-	/*
-	if (m_InputCommands.rightMouseDown)
-		RotateCamByMouse();
-	else
-		startMouseCam = true;
-
-	//process input and update stuff
-	if (m_InputCommands.forward)
-	{	
-		camera.position += m_camLookDirection*m_movespeed;
-	}
-	if (m_InputCommands.back)
-	{
-		camera.position -= m_camLookDirection*m_movespeed;
-	}
-	if (m_InputCommands.right)
-	{
-		camera.position += m_camRight*m_movespeed;
-	}
-	if (m_InputCommands.left)
-	{
-		camera.position -= m_camRight*m_movespeed;
-	}
-
-	//update lookat point
-	m_camLookAt = camera.position + m_camLookDirection;
-
-	//apply camera vectors
-    camera.view = Matrix::CreateLookAt(camera.position, m_camLookAt, Vector3::UnitY);*/
 
 	camera.Update(m_InputCommands);
+
     m_batchEffect->SetView(camera.view);
     m_batchEffect->SetWorld(Matrix::Identity);
 	m_displayChunk.m_terrainEffect->SetView(camera.view);
@@ -620,47 +550,6 @@ std::wstring StringToWCHART(std::string s)
 	std::wstring r(buf);
 	delete[] buf;
 	return r;
-}
-
-void Game::RotateCamByMouse()
-{
-	//only useful if rotating based on mouse click, not currently in use
-	if (startMouseCam)
-	{
-		m_PrevMouseX = m_InputCommands.mouseX;
-		m_PrevMouseY = m_InputCommands.mouseY;
-		startMouseCam = false;
-		return;
-	}
-
-	float sensitivity = 0.5f;
-
-	//work out movement based on where mouse was last frame compared to now
-	float deltaX = (m_InputCommands.mouseX - m_PrevMouseX) * sensitivity;
-	float deltaY = (m_InputCommands.mouseY - m_PrevMouseY) * sensitivity;
-
-	//make this mouse pos the prev for next frame
-	m_PrevMouseX = m_InputCommands.mouseX;
-	m_PrevMouseY = m_InputCommands.mouseY;
-
-	//change yaw and pitch
-	m_camOrientation.y += deltaX; //yaw (side)
-	m_camOrientation.x -= deltaY; //pitch(up)
-
-	//clamp to stop from flipping
-	m_camOrientation.x = std::max(-89.0f, std::min(m_camOrientation.x, 89.0f));
-
-	// Convert to radians
-	float yaw = m_camOrientation.y;
-	float pitch = m_camOrientation.x;
-
-	//use formula from wiki
-	m_camLookDirection = Vector3( cos(yaw * 3.1415f / 180) * cos(pitch * 3.1415 / 180), sin(pitch * 3.1415 / 180), 
-																						sin(yaw * 3.1415 / 180) * cos(pitch * 3.1415 / 180));
-	m_camLookDirection.Normalize();
-
-	//change right vec
-	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 }
 
 //pick objects by mouse
