@@ -15,13 +15,17 @@ ToolMain::ToolMain()
 	m_databaseConnection = NULL;
 
 	//zero input commands
-	m_toolInputCommands.forward		= false;
-	m_toolInputCommands.back		= false;
-	m_toolInputCommands.left		= false;
-	m_toolInputCommands.right		= false;
-	m_toolInputCommands.leftMouseDown = false;
-	m_toolInputCommands.mouseX = 0;
-	m_toolInputCommands.mouseY = 0;
+	m_toolInputCommands.forward			= false;
+	m_toolInputCommands.back			= false;
+	m_toolInputCommands.left			= false;
+	m_toolInputCommands.right			= false;
+	m_toolInputCommands.up				= false;
+	m_toolInputCommands.down			= false;
+	m_toolInputCommands.focus			= false;
+	m_toolInputCommands.leftMouseDown	= false;
+	m_toolInputCommands.rightMouseDown	= false;
+	m_toolInputCommands.mouseX			= 0;
+	m_toolInputCommands.mouseY			= 0;
 	
 }
 
@@ -367,11 +371,18 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.up = true;
 	}
 	else m_toolInputCommands.up = false;
+
 	if (m_keyArray['Q'])
 	{
 		m_toolInputCommands.down = true;
 	}
 	else m_toolInputCommands.down = false;
+
+	if (m_keyArray['F'])
+	{
+		m_toolInputCommands.focus = true;
+	}
+	else m_toolInputCommands.focus = false;
 
 	//rotation
 	/*if (m_keyArray['E'])

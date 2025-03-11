@@ -32,22 +32,25 @@ void Camera::Initialise()
 
 void Camera::Update(InputCommands& Input)
 {
-	inputs = Input;	//get reference to inputs (for WASD and mouse)
+	if (cameraActive)
+	{
+		inputs = Input;	//get reference to inputs (for WASD and mouse)
 
-	MoveCamera();
+		MoveCamera();
 
-	//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
-	//when not rotating the camera
-	if (inputs.rightMouseDown)
-		RotateCamera();
-	else
-		cameraStart = true;
+		//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
+		//when not rotating the camera
+		if (inputs.rightMouseDown)
+			RotateCamera();
+		else
+			cameraStart = true;
 
-	//update lookat point
-	lookAt = position + lookDirection;
+		//update lookat point
+		lookAt = position + lookDirection;
 
-	//apply camera vectors
-	view = DirectX::SimpleMath::Matrix::CreateLookAt(position, lookAt, DirectX::SimpleMath::Vector3::UnitY);
+		//apply camera vectors
+		view = DirectX::SimpleMath::Matrix::CreateLookAt(position, lookAt, DirectX::SimpleMath::Vector3::UnitY);
+	}
 }
 
 void Camera::MoveCamera()
@@ -100,5 +103,21 @@ void Camera::RotateCamera()
 
 void Camera::FocusOnObject(DirectX::SimpleMath::Vector3 focus)
 {
+	position.x = focus.x + xOffset;
+	position.y = focus.y + yOffset;
+	position.z = focus.z + zOffset;
 
+	//set lookat to point towards the object
+	lookAt = focus;
+
+	//get the look direction by subtracting camera's position from the target
+	lookDirection = lookAt - position;
+	lookDirection.Normalize();
+
+	//get the right vector
+	lookDirection.Cross(DirectX::SimpleMath::Vector3::UnitY, camRight);
+	camRight.Normalize();
+
+	//update view to pass back to main camera in game.cpp
+	view = DirectX::SimpleMath::Matrix::CreateLookAt(position, lookAt, DirectX::SimpleMath::Vector3::UnitY);
 }

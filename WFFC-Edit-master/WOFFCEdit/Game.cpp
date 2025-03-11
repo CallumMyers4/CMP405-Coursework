@@ -14,7 +14,6 @@ using namespace DirectX::SimpleMath;
 using Microsoft::WRL::ComPtr;
 
 Game::Game()
-
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);
@@ -23,14 +22,9 @@ Game::Game()
 	//initial Settings
 	//modes
 	m_grid = false;
-
-	//functional
-	m_movespeed = 0.30;
-
-	//camera
-	camera.position.x = 0.0f;
-	camera.position.y = 3.7f;
-	camera.position.z = -3.5f;
+    
+    standardCamera.cameraActive = true;
+    focusCamera.cameraActive = false;
 }
 
 Game::~Game()
@@ -64,7 +58,9 @@ void Game::Initialize(HWND window, int width, int height)
 
 	GetClientRect(window, &m_ScreenDimensions);
 
-	camera.Initialise();
+    standardCamera.Initialise();
+	mainCamera.Initialise();
+	focusCamera.Initialise();
 
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -122,12 +118,24 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
+    //if using the normal camera then allow user inputs, and set the main camera's view/pos to match standard camera
+    if (standardCamera.cameraActive)
+    {
+        standardCamera.Update(m_InputCommands);
+        mainCamera.position = standardCamera.position;
+        mainCamera.view = standardCamera.view;
+    }
+    //otherwise use the focus camera's vars (no update because the player cant move, the view/pos will be set in the picking function when it 
+    //calls the FocusObject() function in camera.cpp
+    else if (focusCamera.cameraActive)
+    {
+        mainCamera.position = focusCamera.position;
+        mainCamera.view = focusCamera.view;
+    }
 
-	camera.Update(m_InputCommands);
-
-    m_batchEffect->SetView(camera.view);
+    m_batchEffect->SetView(mainCamera.view);
     m_batchEffect->SetWorld(Matrix::Identity);
-	m_displayChunk.m_terrainEffect->SetView(camera.view);
+	m_displayChunk.m_terrainEffect->SetView(mainCamera.view);
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
 #ifdef DXTK_AUDIO
@@ -185,7 +193,7 @@ void Game::Render()
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(camera.position.x) + L"Cam Z: " + std::to_wstring(camera.position.z);
+	std::wstring var = L"Cam X: " + std::to_wstring(mainCamera.position.x) + L"Cam Z: " + std::to_wstring(mainCamera.position.z);
 	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
 	m_sprites->End();
 
@@ -204,7 +212,7 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, camera.view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList[i].m_model->Draw(context, *m_states, local, mainCamera.view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -578,9 +586,9 @@ int Game::MousePicking()
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
 		//Unproject the points on the near and far plane, with respect to the matrix we just created.
-		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, camera.view, local);
+		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, mainCamera.view, local);
 
-		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, camera.view, local);
+		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, mainCamera.view, local);
 
 		//turn the transformed points into our picking vector. 
 		XMVECTOR pickingVector = farPoint - nearPoint;
@@ -593,6 +601,19 @@ int Game::MousePicking()
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				selectedID = i;
+                //if the focus key is also being held then focus camera to object
+                if (m_InputCommands.focus)
+                {
+                    standardCamera.cameraActive = false;
+                    focusCamera.cameraActive = true;
+
+                    //store the selected objects position to pass to camera class 
+                    DirectX::SimpleMath::Vector3 objectPos{ m_displayList[i].m_position.x, m_displayList[i].m_position.y,
+                                                                m_displayList[i].m_position.z };
+
+                    //set the camera to focus on the selected object
+                    focusCamera.FocusOnObject(objectPos);
+                }
 			}
 		}
 	}

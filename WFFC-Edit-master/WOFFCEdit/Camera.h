@@ -27,6 +27,8 @@ public:
 
 	DirectX::SimpleMath::Matrix view;	//view calculation
 	float sensitivity = 5.0f, moveSpeed = 1.5f;	//mouse sensitivity and movement speed
+	float xOffset = 2 , yOffset = 1, zOffset = -3;	//how much to offset the focus camera's osition compared to the object
+	bool cameraActive;
 
 private:
 	//internal functions

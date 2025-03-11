@@ -52,9 +52,6 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
-	//camera
-	void RotateCamByMouse();	//rotate the camera according to mouse
-
 	//object selection
 	int	 MousePicking();
 	RECT		m_ScreenDimensions;
@@ -77,14 +74,8 @@ private:
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 
-	//functionality
-	float								m_movespeed;
-	float								m_PrevMouseX, m_PrevMouseY;
-	bool								startMouseCam;
-	DirectX::SimpleMath::Vector3 mouseDeltas;
-
-	//camera
-	Camera camera;
+	//cameras (the camera which will pass vars, the camera for focusing on objects and the normal one which allows user to move around the scene)
+	Camera mainCamera, focusCamera, standardCamera;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off
@@ -130,7 +121,6 @@ private:
 #endif
 
     DirectX::SimpleMath::Matrix                                             m_world;
-    DirectX::SimpleMath::Matrix                                             m_view;
     DirectX::SimpleMath::Matrix                                             m_projection;
 };
 
