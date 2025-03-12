@@ -191,6 +191,88 @@ void ToolMain::onActionLoad()
 
 }
 
+//allows user to add new objects as needed
+void ToolMain::addNewObject(DirectX::SimpleMath::Vector3 objectPos, DirectX::SimpleMath::Vector3 objectRotation,
+	DirectX::SimpleMath::Vector3 objectScale, std::string modelPath, std::string texturePath)
+{
+	//SQL
+	int rc;
+	sqlite3_stmt* pResults;								//results of the query
+
+	//Populate with our new objects
+	std::wstring sqlCommand2;
+
+	{
+		std::stringstream command;
+		command << "INSERT INTO Objects VALUES("
+			<< 16 << ","
+			<< 0 << ","
+			<< "'" << modelPath << "'" << ","
+			<< "'" << texturePath << "'" << ","
+			<< objectPos.x << ","
+			<< objectPos.y << ","
+			<< objectPos.z << ","
+			<< objectRotation.x << ","
+			<< objectRotation.y << ","
+			<< objectRotation.z << ","
+			<< objectScale.x << ","
+			<< objectScale.y << ","
+			<< objectScale.z << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< '...' << ","  // Fixed empty value
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 1 << ","
+			<< 1 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< '...' << ","  // Fixed empty value
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< 0 << ","
+			<< "'" << "Name" << "'" << ","  // Fixed missing quotes
+			<< 0 << ","
+			<< 1 << ","
+			<< 2 << ","
+			<< 3 << ","
+			<< 4 << ","
+			<< 5 << ","
+			<< 6 << ","
+			<< 7 << ","
+			<< 8 << ","
+			<< 9 << ","
+			<< 0
+			<< ");";  // Removed trailing comma
+
+
+	std::string sqlCommand2 = command.str();
+	rc = sqlite3_prepare_v2(m_databaseConnection, sqlCommand2.c_str(), -1, &pResults, 0);
+	sqlite3_step(pResults);
+	sqlite3_finalize(pResults);
+	onActionLoad();
+
+	}
+}
+
 void ToolMain::onActionSave()
 {
 	//SQL
@@ -383,6 +465,12 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.focus = true;
 	}
 	else m_toolInputCommands.focus = false;
+
+	if (m_keyArray['R'])
+	{
+		m_toolInputCommands.unfocus = true;
+	}
+	else m_toolInputCommands.unfocus = false;
 
 	//rotation
 	/*if (m_keyArray['E'])

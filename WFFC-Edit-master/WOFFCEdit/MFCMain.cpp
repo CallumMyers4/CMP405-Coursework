@@ -105,7 +105,10 @@ void MFCMain::MenuEditSelect()
 
 void MFCMain::ToolBarButton1()
 {
-	
+	DirectX::SimpleMath::Vector3 objectPos{ 15, 0, 7 };
+	DirectX::SimpleMath::Vector3 objectRot{ 0, 0, 0 };
+	DirectX::SimpleMath::Vector3 objectScale{ 1, 1, 1 };
+	m_ToolSystem.addNewObject(objectPos, objectRot, objectScale, "database/data/placeholder.cmo", "database/data/placeholder.dds");
 	m_ToolSystem.onActionSave();
 }
 

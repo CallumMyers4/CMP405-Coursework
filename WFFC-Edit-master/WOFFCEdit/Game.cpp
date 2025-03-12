@@ -131,6 +131,13 @@ void Game::Update(DX::StepTimer const& timer)
     {
         mainCamera.position = focusCamera.position;
         mainCamera.view = focusCamera.view;
+
+        //if user presses the focus button again then go back to the normal camera
+        if (m_InputCommands.unfocus)
+        {
+            standardCamera.cameraActive = true;
+            focusCamera.cameraActive = false;
+        }
     }
 
     m_batchEffect->SetView(mainCamera.view);
