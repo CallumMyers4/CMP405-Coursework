@@ -14,6 +14,16 @@
 #include "Camera.h"
 #include <vector>
 
+//struct to store details of object currently being selected
+struct SelectedObjectStruct 
+{
+	int selectedId;
+	std::string modelPath;	//the path to the model
+	std::string texturePath;	//the path to the texture
+	DirectX::SimpleMath::Vector3 position;	//objects position
+	DirectX::SimpleMath::Vector3 rotation;	//objects rotation
+	DirectX::SimpleMath::Vector3 scale;		//objects scale
+};
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -50,10 +60,10 @@ public:
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
-	void ClearDisplayList();
 
 	//object selection
 	int	 MousePicking();
+	SelectedObjectStruct selectedObject;
 	RECT		m_ScreenDimensions;
 
 #ifdef DXTK_AUDIO

@@ -608,6 +608,12 @@ int Game::MousePicking()
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				selectedID = i;
+
+                selectedObject.selectedId = m_displayList[i].m_ID;
+                selectedObject.position = m_displayList[i].m_position;
+                selectedObject.rotation = m_displayList[i].m_orientation;
+                selectedObject.scale = m_displayList[i].m_scale;
+
                 //if the focus key is also being held then focus camera to object
                 if (m_InputCommands.focus)
                 {

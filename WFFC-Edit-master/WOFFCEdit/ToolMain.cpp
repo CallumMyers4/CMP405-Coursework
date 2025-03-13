@@ -192,20 +192,26 @@ void ToolMain::onActionLoad()
 }
 
 //allows user to add new objects as needed
-void ToolMain::addNewObject(DirectX::SimpleMath::Vector3 objectPos, DirectX::SimpleMath::Vector3 objectRotation,
-	DirectX::SimpleMath::Vector3 objectScale, std::string modelPath, std::string texturePath)
+void ToolMain::addNewObject()
 {
+	//setup position, scale, model, etc. according to the details of the object being pasted
+	DirectX::SimpleMath::Vector3 objectPos = m_d3dRenderer.selectedObject.position;
+	DirectX::SimpleMath::Vector3 objectRotation = m_d3dRenderer.selectedObject.rotation;
+	DirectX::SimpleMath::Vector3 objectScale = m_d3dRenderer.selectedObject.scale; 
+	objectPos.y = objectPos.y + 5;
+	std::string texturePath = "database/data/placeholder.dds";//m_d3dRenderer.selectedObject.modelPath;
+	std::string modelPath = "database/data/placeholder.cmo"; //m_d3dRenderer.selectedObject.texturePath;
+
 	//SQL
 	int rc;
 	sqlite3_stmt* pResults;								//results of the query
-
 	//Populate with our new objects
 	std::wstring sqlCommand2;
 
 	{
 		std::stringstream command;
 		command << "INSERT INTO Objects VALUES("
-			<< 16 << ","
+			<< m_sceneGraph.size() + 1 << ","
 			<< 0 << ","
 			<< "'" << modelPath << "'" << ","
 			<< "'" << texturePath << "'" << ","
@@ -471,18 +477,4 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.unfocus = true;
 	}
 	else m_toolInputCommands.unfocus = false;
-
-	//rotation
-	/*if (m_keyArray['E'])
-	{
-		m_toolInputCommands.rotRight = true;
-	}
-	else m_toolInputCommands.rotRight = false;
-	if (m_keyArray['Q'])
-	{
-		m_toolInputCommands.rotLeft = true;
-	}
-	else m_toolInputCommands.rotLeft = false;
-	*/
-	//WASD
 }
