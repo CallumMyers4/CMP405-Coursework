@@ -6,6 +6,7 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_QUIT,	&MFCMain::MenuFileQuit)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
+	ON_COMMAND(AFX_IDD_PASTESPECIAL, &MFCMain::PasteSelected)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
@@ -105,13 +106,14 @@ void MFCMain::MenuEditSelect()
 
 void MFCMain::ToolBarButton1()
 {
-	DirectX::SimpleMath::Vector3 objectPos{ 15, 0, 7 };
-	DirectX::SimpleMath::Vector3 objectRot{ 0, 0, 0 };
-	DirectX::SimpleMath::Vector3 objectScale{ 1, 1, 1 };
-	m_ToolSystem.addNewObject();
 	m_ToolSystem.onActionSave();
 }
 
+//paste the selected object
+void MFCMain::PasteSelected()
+{
+	m_ToolSystem.addNewObject();
+}
 
 MFCMain::MFCMain()
 {
