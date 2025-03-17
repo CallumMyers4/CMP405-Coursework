@@ -11,6 +11,7 @@ struct InputCommands
 	bool focus, unfocus;
 	bool rotRight;
 	bool rotLeft;
+	bool ctrl;
 	bool leftMouseDown = false;
 	bool rightMouseDown = false;
 

@@ -139,7 +139,7 @@ void Game::Update(DX::StepTimer const& timer)
             focusCamera.cameraActive = false;
         }
     }
-
+    
     m_batchEffect->SetView(mainCamera.view);
     m_batchEffect->SetWorld(Matrix::Identity);
 	m_displayChunk.m_terrainEffect->SetView(mainCamera.view);
@@ -610,21 +610,10 @@ int Game::MousePicking()
                 //ensures camera always selects the nearest object in the picking ray
                 if (pickedDistance <= nearestObjDistance) 
                 {
-                    // Prepare the formatted debug message
-                    wchar_t buffer[512];  // Buffer for formatted string
-
-                    // Debug message for "false"
-                    swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID for false is %d", selectedID);
-                    OutputDebugString(buffer);  // Output to the Debug window
-
                     m_displayList[selectedID].ChangeColour(false);  //disable selection on last object selected (before new object is confirmed)
                     nearestObjDistance = pickedDistance;
                     selectedID = i;
-
-                    // Debug message for "false"
-                    swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID for true is %d", selectedID);
-                    OutputDebugString(buffer);  // Output to the Debug window
-
+                
                     m_displayList[selectedID].ChangeColour(true);  //enable selection at the newly selected object ID
 
                     selectedObject.selectedId = m_displayList[i].m_ID;

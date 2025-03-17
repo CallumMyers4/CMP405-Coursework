@@ -22,6 +22,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.up				= false;
 	m_toolInputCommands.down			= false;
 	m_toolInputCommands.focus			= false;
+	m_toolInputCommands.ctrl			= false;
 	m_toolInputCommands.leftMouseDown	= false;
 	m_toolInputCommands.rightMouseDown	= false;
 	m_toolInputCommands.mouseX			= 0;
@@ -477,4 +478,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.unfocus = true;
 	}
 	else m_toolInputCommands.unfocus = false;
+	
+	//checks for control key being entered
+	if (m_keyArray[17])
+	{
+		m_toolInputCommands.ctrl = true;
+	}
+	else m_toolInputCommands.ctrl = false;
 }
