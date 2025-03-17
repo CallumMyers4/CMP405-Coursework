@@ -89,6 +89,7 @@ private:
 
 	//control variables
 	bool m_grid;							//grid rendering on / off
+	int selectedID = 0;						//the ID of the object currently selected
 
 	// Device resources.
     std::shared_ptr<DX::DeviceResources>    m_deviceResources;

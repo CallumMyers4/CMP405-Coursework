@@ -30,3 +30,17 @@ DisplayObject::~DisplayObject()
 {
 //	delete m_texture_diffuse;
 }
+
+void DisplayObject::ChangeColour(bool enable)
+{
+	//https://github.com/microsoft/DirectXTK/wiki/Rendering-a-model
+	m_model->UpdateEffects([enable](DirectX::IEffect* effect)
+	{
+		auto highlightFog = dynamic_cast<DirectX::IEffectFog*>(effect);
+		if (highlightFog != nullptr)
+		{
+			highlightFog->SetFogEnabled(enable);
+			highlightFog->SetFogColor(DirectX::Colors::Yellow);
+		}
+	});
+}

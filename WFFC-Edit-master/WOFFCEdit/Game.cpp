@@ -570,8 +570,8 @@ std::wstring StringToWCHART(std::string s)
 //pick objects by mouse
 int Game::MousePicking()
 {
-	int selectedID = -1;
 	float pickedDistance = 0;
+    float nearestObjDistance = 1000;    //the distance to the object nearest the cam when selected
 
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
 		//they may look the same but note, the difference in Z
@@ -607,25 +607,44 @@ int Game::MousePicking()
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
-				selectedID = i;
-
-                selectedObject.selectedId = m_displayList[i].m_ID;
-                selectedObject.position = m_displayList[i].m_position;
-                selectedObject.rotation = m_displayList[i].m_orientation;
-                selectedObject.scale = m_displayList[i].m_scale;
-
-                //if the focus key is also being held then focus camera to object
-                if (m_InputCommands.focus)
+                //ensures camera always selects the nearest object in the picking ray
+                if (pickedDistance <= nearestObjDistance) 
                 {
-                    standardCamera.cameraActive = false;
-                    focusCamera.cameraActive = true;
+                    // Prepare the formatted debug message
+                    wchar_t buffer[512];  // Buffer for formatted string
 
-                    //store the selected objects position to pass to camera class 
-                    DirectX::SimpleMath::Vector3 objectPos{ m_displayList[i].m_position.x, m_displayList[i].m_position.y,
-                                                                m_displayList[i].m_position.z };
+                    // Debug message for "false"
+                    swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID for false is %d", selectedID);
+                    OutputDebugString(buffer);  // Output to the Debug window
 
-                    //set the camera to focus on the selected object
-                    focusCamera.FocusOnObject(objectPos);
+                    m_displayList[selectedID].ChangeColour(false);  //disable selection on last object selected (before new object is confirmed)
+                    nearestObjDistance = pickedDistance;
+                    selectedID = i;
+
+                    // Debug message for "false"
+                    swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID for true is %d", selectedID);
+                    OutputDebugString(buffer);  // Output to the Debug window
+
+                    m_displayList[selectedID].ChangeColour(true);  //enable selection at the newly selected object ID
+
+                    selectedObject.selectedId = m_displayList[i].m_ID;
+                    selectedObject.position = m_displayList[i].m_position;
+                    selectedObject.rotation = m_displayList[i].m_orientation;
+                    selectedObject.scale = m_displayList[i].m_scale;
+
+                    //if the focus key is also being held then focus camera to object
+                    if (m_InputCommands.focus)
+                    {
+                        standardCamera.cameraActive = false;
+                        focusCamera.cameraActive = true;
+
+                        //store the selected objects position to pass to camera class 
+                        DirectX::SimpleMath::Vector3 objectPos{ m_displayList[i].m_position.x, m_displayList[i].m_position.y,
+                                                                    m_displayList[i].m_position.z };
+
+                        //set the camera to focus on the selected object
+                        focusCamera.FocusOnObject(objectPos);
+                    }
                 }
 			}
 		}
