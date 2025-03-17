@@ -204,7 +204,6 @@ void ToolMain::addNewObject()
 	//SQL
 	int rc;
 	sqlite3_stmt* pResults;								//results of the query
-	//Populate with our new objects
 	std::wstring sqlCommand2;
 
 	{
@@ -225,7 +224,7 @@ void ToolMain::addNewObject()
 			<< objectScale.z << ","
 			<< 0 << ","
 			<< 0 << ","
-			<< '...' << ","  // Fixed empty value
+			<< '...' << ","
 			<< 0 << ","
 			<< 0 << ","
 			<< 0 << ","
@@ -239,7 +238,7 @@ void ToolMain::addNewObject()
 			<< 0 << ","
 			<< 0 << ","
 			<< 0 << ","
-			<< '...' << ","  // Fixed empty value
+			<< '...' << ","
 			<< 0 << ","
 			<< 0 << ","
 			<< 0 << ","
@@ -254,7 +253,7 @@ void ToolMain::addNewObject()
 			<< 0 << ","
 			<< 0 << ","
 			<< 0 << ","
-			<< "'" << "Name" << "'" << ","  // Fixed missing quotes
+			<< "'" << "Name" << "'" << ","
 			<< 0 << ","
 			<< 1 << ","
 			<< 2 << ","
@@ -266,7 +265,7 @@ void ToolMain::addNewObject()
 			<< 8 << ","
 			<< 9 << ","
 			<< 0
-			<< ");";  // Removed trailing comma
+			<< ");";
 
 
 	std::string sqlCommand2 = command.str();
@@ -381,6 +380,31 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.leftMouseDown = false;
 	}
 
+	if (m_toolInputCommands.currentMode == InputCommands::Modes::translate)
+	{
+		objectTranslationDir.x = m_toolInputCommands.right - m_toolInputCommands.left;
+		objectTranslationDir.y = m_toolInputCommands.up - m_toolInputCommands.down;
+		objectTranslationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+
+		Translate(objectTranslationDir);
+	}
+	else if (m_toolInputCommands.currentMode == InputCommands::Modes::rotate)
+	{
+		objectRotationDir.x = m_toolInputCommands.right - m_toolInputCommands.left;
+		objectRotationDir.y = m_toolInputCommands.up - m_toolInputCommands.down;
+		objectRotationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+
+		Rotate(objectRotationDir);
+	}
+	else if (m_toolInputCommands.currentMode == InputCommands::Modes::scale)
+	{
+		objectScaleDir.x = m_toolInputCommands.right - m_toolInputCommands.left;
+		objectScaleDir.y = m_toolInputCommands.up - m_toolInputCommands.down;
+		objectScaleDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+
+		Scale(objectScaleDir);
+	}
+
 	//do we have a mode
 	//are we clicking / dragging /releasing
 	//has something changed
@@ -488,4 +512,51 @@ void ToolMain::UpdateInput(MSG * msg)
 void ToolMain::ChangeMode(InputCommands::Modes newMode)
 {
 	m_toolInputCommands.currentMode = newMode;
+}
+
+void ToolMain::Translate(DirectX::SimpleMath::Vector3 direction)
+{
+	//checks it is within the database (below 0 = terrain)
+	if (m_selectedObject > 0)
+	{
+		SceneObject* object = &m_sceneGraph[m_selectedObject]; //get a pointer to the active object in the scene graph
+		object->posX += direction.x;	//move left/right based on direction (1 = right, -1 = left)
+		object->posY += direction.y;	//move up/down based on direction (1 = up, -1 = down)
+		object->posZ += direction.z;	//move forward/back based on direction (1 = forward, -1 = backward)
+	}
+
+	m_d3dRenderer.UpdateDisplayList(m_selectedObject, &m_sceneGraph);
+}
+
+void ToolMain::Rotate(DirectX::SimpleMath::Vector3 direction)
+{
+	//checks it is within the database (below 0 = terrain)
+	if (m_selectedObject > 0)
+	{
+		SceneObject* object = &m_sceneGraph[m_selectedObject]; //get a pointer to the active object in the scene graph
+		object->rotX += direction.x;	//rot in x
+		object->rotY += direction.y;	//rot in y
+		object->rotZ += direction.z;	//rot in z
+	}
+
+	m_d3dRenderer.UpdateDisplayList(m_selectedObject, &m_sceneGraph);
+}
+
+void ToolMain::Scale(DirectX::SimpleMath::Vector3 direction)
+{
+	//checks it is within the database (below 0 = terrain)
+	if (m_selectedObject > 0)
+	{
+		SceneObject* object = &m_sceneGraph[m_selectedObject]; //get a pointer to the active object in the scene graph
+
+		//the ifs prevent the object from flipping if scaled too small
+		if (object->scaX + direction.x > 0.1)
+			object->scaX += direction.x;	//scale in x based on direction (1 = wider, -1 = thinner)
+		if (object->scaY + direction.y > 0.1)
+			object->scaY += direction.y;	//scale in y based on direction (1 = taller, -1 = shorter)
+		if (object->scaZ + direction.z > 0.1)
+		object->scaZ += direction.z;	//scale in z based on direction (1 = bigger, -1 = smaller)
+	}
+
+	m_d3dRenderer.UpdateDisplayList(m_selectedObject, &m_sceneGraph);
 }

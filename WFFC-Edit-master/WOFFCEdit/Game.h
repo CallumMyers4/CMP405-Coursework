@@ -63,6 +63,9 @@ public:
 
 	//object selection
 	int	 MousePicking();
+
+	//move objects
+	void UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph);
 	SelectedObjectStruct selectedObject;
 	RECT		m_ScreenDimensions;
 

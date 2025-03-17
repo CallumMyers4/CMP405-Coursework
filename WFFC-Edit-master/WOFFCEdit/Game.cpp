@@ -119,7 +119,7 @@ void Game::Tick(InputCommands *Input)
 void Game::Update(DX::StepTimer const& timer)
 {
     //if using the normal camera then allow user inputs, and set the main camera's view/pos to match standard camera
-    if (standardCamera.cameraActive)
+    if (standardCamera.cameraActive && m_InputCommands.currentMode == InputCommands::Modes::normal)
     {
         standardCamera.Update(m_InputCommands);
         mainCamera.position = standardCamera.position;
@@ -641,4 +641,23 @@ int Game::MousePicking()
 
 	//if we got a hit.  return it.  
 	return selectedID;
+}
+
+void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
+{
+    DisplayObject& objInDisplay = m_displayList.at(objectID);
+    SceneObject& objInScene = sceneGraph->at(objectID);
+
+    objInDisplay.m_scale.x = objInScene.scaX;
+    objInDisplay.m_scale.y = objInScene.scaY;
+    objInDisplay.m_scale.z = objInScene.scaZ;
+    objInDisplay.m_scale.z = objInScene.scaZ;
+
+    objInDisplay.m_orientation.x = objInScene.rotX;
+    objInDisplay.m_orientation.y = objInScene.rotY;
+    objInDisplay.m_orientation.z = objInScene.rotZ;
+
+    objInDisplay.m_position.x = objInScene.posX;
+    objInDisplay.m_position.y = objInScene.posY;
+    objInDisplay.m_position.z = objInScene.posZ;
 }

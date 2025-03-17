@@ -28,6 +28,18 @@ public: //methods
 
 	void ChangeMode(InputCommands::Modes newMode);	//switch between the mode types
 
+	//translate object functions
+	void Translate(DirectX::SimpleMath::Vector3 direction);		//move object
+	DirectX::SimpleMath::Vector3 objectTranslationDir	{ 0, 0, 0 };	//where to move to
+
+	//rotate object functions
+	void Rotate(DirectX::SimpleMath::Vector3 direction);		//rotate object
+	DirectX::SimpleMath::Vector3 objectRotationDir{ 0, 0, 0 };	//axis to rotate in
+
+	//scale object functions
+	void Scale(DirectX::SimpleMath::Vector3 direction);		//scale object
+	DirectX::SimpleMath::Vector3 objectScaleDir{ 0, 0, 0 };	//axis to scale in
+
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
 	ChunkObject					m_chunk;		//our landscape chunk
