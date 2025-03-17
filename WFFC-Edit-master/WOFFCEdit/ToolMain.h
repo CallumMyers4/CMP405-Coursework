@@ -20,6 +20,7 @@ public: //methods
 	void	onActionInitialise(HWND handle, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionLoad();													//load the current chunk
 	void	addNewObject();													//add a new object to the database
+	void	DeleteObject();													//add a new object to the database
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
 

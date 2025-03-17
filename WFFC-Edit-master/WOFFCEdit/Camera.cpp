@@ -36,7 +36,8 @@ void Camera::Update(InputCommands& Input)
 	{
 		inputs = Input;	//get reference to inputs (for WASD and mouse)
 
-		MoveCamera();
+		if (Input.currentMode == InputCommands::Modes::normal)
+			MoveCamera();
 
 		//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
 		//when not rotating the camera

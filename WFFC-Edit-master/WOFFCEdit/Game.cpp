@@ -118,8 +118,23 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
+    //if the focus key is also being held then focus camera to object
+    if (m_InputCommands.focus)
+    {
+        standardCamera.cameraActive = false;
+        focusCamera.cameraActive = true;
+
+        //set the camera to focus on the selected object
+        focusCamera.FocusOnObject(selectedObject.position);
+    }
+    if (m_InputCommands.unfocus)   //if user presses the focus button again then go back to the normal camera
+    {
+        standardCamera.cameraActive = true;
+        focusCamera.cameraActive = false;
+    }
+
     //if using the normal camera then allow user inputs, and set the main camera's view/pos to match standard camera
-    if (standardCamera.cameraActive && m_InputCommands.currentMode == InputCommands::Modes::normal)
+    if (standardCamera.cameraActive)
     {
         standardCamera.Update(m_InputCommands);
         mainCamera.position = standardCamera.position;
@@ -131,13 +146,6 @@ void Game::Update(DX::StepTimer const& timer)
     {
         mainCamera.position = focusCamera.position;
         mainCamera.view = focusCamera.view;
-
-        //if user presses the focus button again then go back to the normal camera
-        if (m_InputCommands.unfocus)
-        {
-            standardCamera.cameraActive = true;
-            focusCamera.cameraActive = false;
-        }
     }
     
     m_batchEffect->SetView(mainCamera.view);
@@ -616,25 +624,19 @@ int Game::MousePicking()
                 
                     m_displayList[selectedID].ChangeColour(true);  //enable selection at the newly selected object ID
 
-                    selectedObject.selectedId = m_displayList[i].m_ID;
+                    selectedObject.selectedId = i;
                     selectedObject.position = m_displayList[i].m_position;
                     selectedObject.rotation = m_displayList[i].m_orientation;
                     selectedObject.scale = m_displayList[i].m_scale;
 
-                    //if the focus key is also being held then focus camera to object
-                    if (m_InputCommands.focus)
-                    {
-                        standardCamera.cameraActive = false;
-                        focusCamera.cameraActive = true;
+                    // Prepare the formatted debug message
+                    wchar_t buffer[512];  // Buffer for formatted string
 
-                        //store the selected objects position to pass to camera class 
-                        DirectX::SimpleMath::Vector3 objectPos{ m_displayList[i].m_position.x, m_displayList[i].m_position.y,
-                                                                    m_displayList[i].m_position.z };
-
-                        //set the camera to focus on the selected object
-                        focusCamera.FocusOnObject(objectPos);
-                    }
+                    // Debug message for "false"
+                    swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID is %d \n", selectedObject.selectedId);
+                    OutputDebugString(buffer);  // Output to the Debug window
                 }
+
 			}
 		}
 	}
@@ -657,7 +659,7 @@ void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
     objInDisplay.m_orientation.y = objInScene.rotY;
     objInDisplay.m_orientation.z = objInScene.rotZ;
 
-    objInDisplay.m_position.x = objInScene.posX;
-    objInDisplay.m_position.y = objInScene.posY;
-    objInDisplay.m_position.z = objInScene.posZ;
+    selectedObject.position.x = objInDisplay.m_position.x = objInScene.posX;
+    selectedObject.position.y = objInDisplay.m_position.y = objInScene.posY;
+    selectedObject.position.z = objInDisplay.m_position.z = objInScene.posZ;
 }

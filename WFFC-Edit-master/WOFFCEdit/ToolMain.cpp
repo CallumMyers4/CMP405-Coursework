@@ -197,6 +197,7 @@ void ToolMain::addNewObject()
 	DirectX::SimpleMath::Vector3 objectPos = m_d3dRenderer.selectedObject.position;
 	DirectX::SimpleMath::Vector3 objectRotation = m_d3dRenderer.selectedObject.rotation;
 	DirectX::SimpleMath::Vector3 objectScale = m_d3dRenderer.selectedObject.scale; 
+
 	objectPos.y = objectPos.y + 5;
 	std::string texturePath = "database/data/placeholder.dds";//m_d3dRenderer.selectedObject.modelPath;
 	std::string modelPath = "database/data/placeholder.cmo"; //m_d3dRenderer.selectedObject.texturePath;
@@ -275,6 +276,36 @@ void ToolMain::addNewObject()
 	onActionLoad();
 
 	}
+}
+
+void ToolMain::DeleteObject()
+{
+	// Prepare the formatted debug message
+	wchar_t buffer[512];  // Buffer for formatted string
+
+	// Debug message for "false"
+	swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID is %d \n", m_d3dRenderer.selectedObject.selectedId);
+	OutputDebugString(buffer);  // Output to the Debug window
+
+	if (m_d3dRenderer.selectedObject.selectedId > 0)
+	{
+		//SQL
+		int rc;
+		sqlite3_stmt* pResults;								//results of the query
+		std::wstring sqlCommand2;
+
+		{
+			std::stringstream command;
+			command << "DELETE FROM Objects WHERE ID = " << m_d3dRenderer.selectedObject.selectedId << ";";
+
+			std::string sqlCommand2 = command.str();
+			rc = sqlite3_prepare_v2(m_databaseConnection, sqlCommand2.c_str(), -1, &pResults, 0);
+			sqlite3_step(pResults);
+			sqlite3_finalize(pResults);
+			onActionLoad();
+		}
+	}
+
 }
 
 void ToolMain::onActionSave()
@@ -405,6 +436,11 @@ void ToolMain::Tick(MSG *msg)
 		Scale(objectScaleDir);
 	}
 
+	if (m_toolInputCommands.deleteKey)
+	{
+		DeleteObject();
+	}
+
 	//do we have a mode
 	//are we clicking / dragging /releasing
 	//has something changed
@@ -507,6 +543,12 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.ctrl = true;
 	}
 	else m_toolInputCommands.ctrl = false;
+	if (m_keyArray[46])
+	{
+		m_toolInputCommands.deleteKey = true;
+	}
+	else
+		m_toolInputCommands.deleteKey = false;
 }
 
 void ToolMain::ChangeMode(InputCommands::Modes newMode)

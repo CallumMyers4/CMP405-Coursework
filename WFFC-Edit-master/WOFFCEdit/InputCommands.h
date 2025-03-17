@@ -21,6 +21,7 @@ struct InputCommands
 	bool up;
 	bool down;
 	bool focus, unfocus;
+	bool deleteKey;
 	bool rotRight;
 	bool rotLeft;
 	bool ctrl;
