@@ -37,6 +37,12 @@ private:
 	afx_msg	void ToolBarButton1();
 	afx_msg void PasteSelected();
 
+	//switch between modes
+	afx_msg void NormalMode();
+	afx_msg void TranslateMode();
+	afx_msg void RotateMode();
+	afx_msg void ScaleMode();
+
 
 	DECLARE_MESSAGE_MAP()	// required macro for message map functionality  One per class
 };

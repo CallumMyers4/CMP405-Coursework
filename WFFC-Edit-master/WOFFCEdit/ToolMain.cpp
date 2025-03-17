@@ -27,9 +27,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.rightMouseDown	= false;
 	m_toolInputCommands.mouseX			= 0;
 	m_toolInputCommands.mouseY			= 0;
-	
 }
-
 
 ToolMain::~ToolMain()
 {
@@ -485,4 +483,9 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.ctrl = true;
 	}
 	else m_toolInputCommands.ctrl = false;
+}
+
+void ToolMain::ChangeMode(InputCommands::Modes newMode)
+{
+	m_toolInputCommands.currentMode = newMode;
 }

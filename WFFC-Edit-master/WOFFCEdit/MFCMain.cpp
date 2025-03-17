@@ -7,6 +7,10 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::PasteSelected)
 	ON_COMMAND(ID_EDIT_PASTESELECTED, &MFCMain::PasteSelected)
+	ON_COMMAND(ID_MODES_NORMAL, &MFCMain::NormalMode)
+	ON_COMMAND(ID_MODES_TRANSLATE, &MFCMain::TranslateMode)
+	ON_COMMAND(ID_MODES_ROTATE, &MFCMain::RotateMode)
+	ON_COMMAND(ID_MODES_SCALE, &MFCMain::ScaleMode)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
@@ -112,6 +116,26 @@ void MFCMain::ToolBarButton1()
 void MFCMain::PasteSelected()
 {
 	m_ToolSystem.addNewObject();
+}
+
+void MFCMain::NormalMode()
+{
+	m_ToolSystem.ChangeMode(InputCommands::Modes::normal);
+}
+
+void MFCMain::TranslateMode()
+{
+	m_ToolSystem.ChangeMode(InputCommands::Modes::translate);
+}
+
+void MFCMain::RotateMode()
+{
+	m_ToolSystem.ChangeMode(InputCommands::Modes::rotate);
+}
+
+void MFCMain::ScaleMode()
+{
+	m_ToolSystem.ChangeMode(InputCommands::Modes::scale);
 }
 
 MFCMain::MFCMain()
