@@ -72,6 +72,9 @@ public:
 	//empty camera which will store the variables of the camera currently active
 	Camera mainCamera;
 
+	//store all objects currently selected
+	std::vector<int> multiSelectObjIDs;
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif

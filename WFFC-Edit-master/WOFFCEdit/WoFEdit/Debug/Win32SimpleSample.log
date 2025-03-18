@@ -16,6 +16,6 @@ C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework
 C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(615,115): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
 C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(615,89): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
 C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(624,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(633,55): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(654,20): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(645,20): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Game.cpp(664,27): warning C4018: '<': signed/unsigned mismatch
   Win32SimpleSample.vcxproj -> C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Debug\WoFEdit.exe

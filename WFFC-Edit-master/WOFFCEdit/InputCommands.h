@@ -24,7 +24,7 @@ struct InputCommands
 	bool deleteKey, deleteKeyHeld;		//the second var will check if delete is being held, then prevent it from deleting multiple
 	bool rotRight;
 	bool rotLeft;
-	bool ctrl;
+	bool ctrl, shift;
 	bool leftMouseDown = false;
 	bool rightMouseDown = false;
 

@@ -23,6 +23,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.down			= false;
 	m_toolInputCommands.focus			= false;
 	m_toolInputCommands.ctrl			= false;
+	m_toolInputCommands.shift			= false;
 	m_toolInputCommands.deleteKey		= false;
 	m_toolInputCommands.deleteKeyHeld	= false;
 	m_toolInputCommands.leftMouseDown	= false;
@@ -450,6 +451,13 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.ctrl = true;
 	}
 	else m_toolInputCommands.ctrl = false;
+
+	//checks for shift key being entered
+	if (m_keyArray[16])
+	{
+		m_toolInputCommands.shift = true;
+	}
+	else m_toolInputCommands.shift = false;
 
 	//checks if delete key is pressed, and also whether or not it was last frame too (turns from keyDown to keyPressed, couldnt find this in the
 	//framework)

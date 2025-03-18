@@ -629,17 +629,8 @@ int Game::MousePicking()
                 // ensures camera always selects the nearest object in the picking ray
                 if (pickedDistance <= nearestObjDistance)
                 {
-                    //disable selection on last object selected before new one is confirmed
-                    if (selectedID >= 0 && selectedID < m_displayList.size())
-                    {
-                        m_displayList[selectedID].ChangeColour(false);
-                    }
-
                     nearestObjDistance = pickedDistance;
                     selectedID = i;
-
-                    //enable selection at the newly selected object ID
-                    m_displayList[selectedID].ChangeColour(true);
 
                     selectedObject.selectedId = i;
                     selectedObject.position = m_displayList[i].m_position;
@@ -654,6 +645,37 @@ int Game::MousePicking()
     if (selectedID >= m_displayList.size())
     {
         selectedID = m_displayList.size() - 1;  //this makes it so the oject is set to a value within the vector if this happens
+    }
+
+    //if holding shift then also add to the vector
+    if (m_InputCommands.shift)
+    {
+        //highlight the new object
+        m_displayList[selectedID].ChangeColour(true);
+
+        //add to vector of selected objects
+        multiSelectObjIDs.push_back(selectedID);
+    }
+    else     //otherwise just empty it and keep it only filled with the current selection
+    {
+        int curID = 0;  //for running through the vector
+
+        //deselect all of the old selected items
+        for (int i = 0; i < multiSelectObjIDs.size(); i++)
+        {
+            //checks there is objects to deselect
+            if (multiSelectObjIDs.size() > 0)
+            {
+                curID = multiSelectObjIDs[i];   //set the ID to move to be the ID in the current pos of the vector
+                m_displayList[curID].ChangeColour(false);
+            }
+        }
+
+        multiSelectObjIDs.clear();
+        multiSelectObjIDs.push_back(selectedID);
+
+        //highlight the new object
+        m_displayList[selectedID].ChangeColour(true);
     }
 
     return selectedID;
