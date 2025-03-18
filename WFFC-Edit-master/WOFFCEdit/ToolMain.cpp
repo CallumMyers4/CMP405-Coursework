@@ -214,8 +214,9 @@ void ToolMain::addNewObject()
 		pastedObject.posZ += 3;
 
 		m_sceneGraph.push_back(pastedObject);		//add new object to scene graph
-		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
 	}
+
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
 }
 
 void ToolMain::DeleteObject()
@@ -228,8 +229,9 @@ void ToolMain::DeleteObject()
 		curID = m_d3dRenderer.multiSelectObjIDs[i];
 
 		m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
-		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
 	}
+
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
 }
 
 void ToolMain::onActionSave()
@@ -494,47 +496,74 @@ void ToolMain::ChangeMode(InputCommands::Modes newMode)
 
 void ToolMain::Translate(DirectX::SimpleMath::Vector3 direction)
 {
-	//checks it is within the database (below 0 = terrain)
-	if (m_selectedObject > 0)
+	int curID = 0;
+
+	//delete all objects currently in the selection array
+	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
-		SceneObject* object = &m_sceneGraph[m_selectedObject]; //get a pointer to the active object in the scene graph
-		object->posX += direction.x;	//move left/right based on direction (1 = right, -1 = left)
-		object->posY += direction.y;	//move up/down based on direction (1 = up, -1 = down)
-		object->posZ += direction.z;	//move forward/back based on direction (1 = forward, -1 = backward)
+		curID = m_d3dRenderer.multiSelectObjIDs[i];
+
+		//checks it is within the database (below 0 = terrain)
+		if (curID > 0)
+		{
+			SceneObject* object = &m_sceneGraph[curID]; //get a pointer to the active object in the scene graph
+			object->posX += direction.x;	//move left/right based on direction (1 = right, -1 = left)
+			object->posY += direction.y;	//move up/down based on direction (1 = up, -1 = down)
+			object->posZ += direction.z;	//move forward/back based on direction (1 = forward, -1 = backward)
+
+			m_d3dRenderer.UpdateDisplayList(curID, &m_sceneGraph);
+		}
 	}
 
-	m_d3dRenderer.UpdateDisplayList(m_selectedObject, &m_sceneGraph);
 }
 
 void ToolMain::Rotate(DirectX::SimpleMath::Vector3 direction)
 {
-	//checks it is within the database (below 0 = terrain)
-	if (m_selectedObject > 0)
+	int curID = 0;
+
+	//delete all objects currently in the selection array
+	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
-		SceneObject* object = &m_sceneGraph[m_selectedObject]; //get a pointer to the active object in the scene graph
-		object->rotX += direction.x;	//rot in x
-		object->rotY += direction.y;	//rot in y
-		object->rotZ += direction.z;	//rot in z
+		curID = m_d3dRenderer.multiSelectObjIDs[i];
+
+		//checks it is within the database (below 0 = terrain)
+		if (curID > 0)
+		{
+			SceneObject* object = &m_sceneGraph[curID]; //get a pointer to the active object in the scene graph
+
+			object->rotX += direction.x;	//rot in x
+			object->rotY += direction.y;	//rot in y
+			object->rotZ += direction.z;	//rot in z
+
+			m_d3dRenderer.UpdateDisplayList(curID, &m_sceneGraph);
+		}
 	}
 
-	m_d3dRenderer.UpdateDisplayList(m_selectedObject, &m_sceneGraph);
 }
 
 void ToolMain::Scale(DirectX::SimpleMath::Vector3 direction)
 {
-	//checks it is within the database (below 0 = terrain)
-	if (m_selectedObject > 0)
+	int curID = 0;
+
+	//delete all objects currently in the selection array
+	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
-		SceneObject* object = &m_sceneGraph[m_selectedObject]; //get a pointer to the active object in the scene graph
+		curID = m_d3dRenderer.multiSelectObjIDs[i];
 
-		//the ifs prevent the object from flipping if scaled too small
-		if (object->scaX + direction.x > 0.1)
-			object->scaX += direction.x;	//scale in x based on direction (1 = wider, -1 = thinner)
-		if (object->scaY + direction.y > 0.1)
-			object->scaY += direction.y;	//scale in y based on direction (1 = taller, -1 = shorter)
-		if (object->scaZ + direction.z > 0.1)
-		object->scaZ += direction.z;	//scale in z based on direction (1 = bigger, -1 = smaller)
+		//checks it is within the database (below 0 = terrain)
+		if (curID > 0)
+		{
+			SceneObject* object = &m_sceneGraph[curID]; //get a pointer to the active object in the scene graph
+
+			//the ifs prevent the object from flipping if scaled too small
+			if (object->scaX + direction.x > 0.1)
+				object->scaX += direction.x;	//scale in x based on direction (1 = wider, -1 = thinner)
+			if (object->scaY + direction.y > 0.1)
+				object->scaY += direction.y;	//scale in y based on direction (1 = taller, -1 = shorter)
+			if (object->scaZ + direction.z > 0.1)
+				object->scaZ += direction.z;	//scale in z based on direction (1 = bigger, -1 = smaller)
+
+			m_d3dRenderer.UpdateDisplayList(curID, &m_sceneGraph);
+		}
 	}
-
-	m_d3dRenderer.UpdateDisplayList(m_selectedObject, &m_sceneGraph);
 }
