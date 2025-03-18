@@ -196,24 +196,40 @@ void ToolMain::onActionLoad()
 //allows user to add new objects as needed
 void ToolMain::addNewObject()
 {
-	//creates a new object with all the same variables as the one selected
-	SceneObject pastedObject = m_sceneGraph[m_d3dRenderer.selectedObject.selectedId];
+	int curID = 0;
 
-	//add to the end of the scene graph to get a unique ID
-	pastedObject.ID = m_sceneGraph.size() + 1;
+	//pastes all objets currently in the selection array
+	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
+	{
+		curID = m_d3dRenderer.multiSelectObjIDs[i];
 
-	//give a slight offset to pos
-	pastedObject.posX += 5;
-	pastedObject.posZ += 3;
+		//creates a new object with all the same variables as the one selected
+		SceneObject pastedObject = m_sceneGraph[curID];
 
-	m_sceneGraph.push_back(pastedObject);		//add new object to scene graph
-	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
+		//add to the end of the scene graph to get a unique ID
+		pastedObject.ID = m_sceneGraph.size() + 1;
+
+		//give a slight offset to pos
+		pastedObject.posX += 5;
+		pastedObject.posZ += 3;
+
+		m_sceneGraph.push_back(pastedObject);		//add new object to scene graph
+		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
+	}
 }
 
 void ToolMain::DeleteObject()
 {
-	m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
-	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
+	int curID = 0;
+
+	//delete all objects currently in the selection array
+	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
+	{
+		curID = m_d3dRenderer.multiSelectObjIDs[i];
+
+		m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
+		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
+	}
 }
 
 void ToolMain::onActionSave()
