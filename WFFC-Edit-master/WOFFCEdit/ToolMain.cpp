@@ -195,120 +195,24 @@ void ToolMain::onActionLoad()
 //allows user to add new objects as needed
 void ToolMain::addNewObject()
 {
-	//setup position, scale, model, etc. according to the details of the object being pasted
-	DirectX::SimpleMath::Vector3 objectPos = m_d3dRenderer.selectedObject.position;
-	DirectX::SimpleMath::Vector3 objectRotation = m_d3dRenderer.selectedObject.rotation;
-	DirectX::SimpleMath::Vector3 objectScale = m_d3dRenderer.selectedObject.scale; 
+	//creates a new object with all the same variables as the one selected
+	SceneObject pastedObject = m_sceneGraph[m_d3dRenderer.selectedObject.selectedId];
 
-	objectPos.y = objectPos.y + 5;
-	std::string texturePath = "database/data/placeholder.dds";//m_d3dRenderer.selectedObject.modelPath;
-	std::string modelPath = "database/data/placeholder.cmo"; //m_d3dRenderer.selectedObject.texturePath;
+	//add to the end of the scene graph to get a unique ID
+	pastedObject.ID = m_sceneGraph.size() + 1;
 
-	//SQL
-	int rc;
-	sqlite3_stmt* pResults;								//results of the query
-	std::wstring sqlCommand2;
+	//give a slight offset to pos
+	pastedObject.posX += 5;
+	pastedObject.posZ += 3;
 
-	{
-		std::stringstream command;
-		command << "INSERT INTO Objects VALUES("
-			<< m_sceneGraph.size() + 1 << ","
-			<< 0 << ","
-			<< "'" << modelPath << "'" << ","
-			<< "'" << texturePath << "'" << ","
-			<< objectPos.x << ","
-			<< objectPos.y << ","
-			<< objectPos.z << ","
-			<< objectRotation.x << ","
-			<< objectRotation.y << ","
-			<< objectRotation.z << ","
-			<< objectScale.x << ","
-			<< objectScale.y << ","
-			<< objectScale.z << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< '...' << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 1 << ","
-			<< 1 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< '...' << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< 0 << ","
-			<< "'" << "Name" << "'" << ","
-			<< 0 << ","
-			<< 1 << ","
-			<< 2 << ","
-			<< 3 << ","
-			<< 4 << ","
-			<< 5 << ","
-			<< 6 << ","
-			<< 7 << ","
-			<< 8 << ","
-			<< 9 << ","
-			<< 0
-			<< ");";
-
-
-	std::string sqlCommand2 = command.str();
-	rc = sqlite3_prepare_v2(m_databaseConnection, sqlCommand2.c_str(), -1, &pResults, 0);
-	sqlite3_step(pResults);
-	sqlite3_finalize(pResults);
-	onActionLoad();
-	}
+	m_sceneGraph.push_back(pastedObject);		//add new object to scene graph
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
 }
 
 void ToolMain::DeleteObject()
 {
-	int ID = m_sceneGraph.at(m_d3dRenderer.selectedObject.selectedId).ID;
-
-	// Prepare the formatted debug message
-	wchar_t buffer[512];  // Buffer for formatted string
-
-	// Debug message for "false"
-	swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID is %d \n", ID);
-	OutputDebugString(buffer);  // Output to the Debug window
-
-	if (ID > 0)
-	{
-		//SQL
-		int rc;
-		sqlite3_stmt* pResults;								//results of the query
-		std::wstring sqlCommand2;
-
-		{
-			std::stringstream command;
-			command << "DELETE FROM Objects WHERE ID = " << ID << ";";
-
-			std::string sqlCommand2 = command.str();
-			rc = sqlite3_prepare_v2(m_databaseConnection, sqlCommand2.c_str(), -1, &pResults, 0);
-			sqlite3_step(pResults);
-			sqlite3_finalize(pResults);
-			onActionLoad();
-		}
-	}
-
+	m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
 }
 
 void ToolMain::onActionSave()

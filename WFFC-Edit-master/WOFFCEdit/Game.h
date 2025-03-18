@@ -69,6 +69,9 @@ public:
 	SelectedObjectStruct selectedObject;
 	RECT		m_ScreenDimensions;
 
+	//empty camera which will store the variables of the camera currently active
+	Camera mainCamera;
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -88,7 +91,7 @@ private:
 	InputCommands						m_InputCommands;
 
 	//cameras (the camera which will pass vars, the camera for focusing on objects and the normal one which allows user to move around the scene)
-	Camera mainCamera, focusCamera, standardCamera;
+	Camera focusCamera, standardCamera;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

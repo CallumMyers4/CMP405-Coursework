@@ -139,6 +139,10 @@ void Game::Update(DX::StepTimer const& timer)
         standardCamera.Update(m_InputCommands);
         mainCamera.position = standardCamera.position;
         mainCamera.view = standardCamera.view;
+
+        //needed for toolmain calculations
+        mainCamera.camRight = standardCamera.camRight;
+        mainCamera.lookDirection = standardCamera.lookDirection;
     }
     //otherwise use the focus camera's vars (no update because the player cant move, the view/pos will be set in the picking function when it 
     //calls the FocusObject() function in camera.cpp
@@ -146,6 +150,10 @@ void Game::Update(DX::StepTimer const& timer)
     {
         mainCamera.position = focusCamera.position;
         mainCamera.view = focusCamera.view;
+
+        //needed for toolmain calculations
+        mainCamera.camRight = focusCamera.camRight;
+        mainCamera.lookDirection = focusCamera.lookDirection;
     }
     
     m_batchEffect->SetView(mainCamera.view);
@@ -575,68 +583,82 @@ std::wstring StringToWCHART(std::string s)
 	return r;
 }
 
-//pick objects by mouse
 int Game::MousePicking()
 {
-	float pickedDistance = 0;
-    float nearestObjDistance = 1000;    //the distance to the object nearest the cam when selected
+    float pickedDistance = 0;
+    float nearestObjDistance = 1000;    // the distance to the object nearest the cam when selected
 
-	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
-		//they may look the same but note, the difference in Z
-	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.mouseY, 0.0f, 1.0f);
-	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.mouseY, 1.0f, 1.0f);
+    // setup near and far planes of frustum with mouse X and mouse Y passed down from ToolMain
+    const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.mouseY, 0.0f, 1.0f);
+    const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.mouseY, 1.0f, 1.0f);
 
-	//Loop through entire display list of objects and pick with each in turn. 
-	for (int i = 0; i < m_displayList.size(); i++)
-	{
-		//Get the scale factor and translation of the object
-		const XMVECTORF32 scale = { m_displayList[i].m_scale.x,		m_displayList[i].m_scale.y,		m_displayList[i].m_scale.z };
-		const XMVECTORF32 translate = { m_displayList[i].m_position.x,		m_displayList[i].m_position.y,	m_displayList[i].m_position.z };
+    // Loop through entire display list of objects and pick with each in turn
+    for (int i = 0; i < m_displayList.size(); i++)
+    {
+        // Get the scale factor and translation of the object
+        const XMVECTORF32 scale = { m_displayList[i].m_scale.x, m_displayList[i].m_scale.y, m_displayList[i].m_scale.z };
+        const XMVECTORF32 translate = { m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z };
 
-		//convert euler angles into a quaternion for the rotation of the object
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180, m_displayList[i].m_orientation.x * 3.1415 / 180,
-			m_displayList[i].m_orientation.z * 3.1415 / 180);
+        // convert euler angles into a quaternion for the rotation of the object
+        XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180,
+            m_displayList[i].m_orientation.x * 3.1415 / 180,
+            m_displayList[i].m_orientation.z * 3.1415 / 180);
 
-		//create set the matrix of the selected object in the world based on the translation, scale and rotation.
-		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
+        // create set the matrix of the selected object in the world based on the translation, scale and rotation
+        XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		//Unproject the points on the near and far plane, with respect to the matrix we just created.
-		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, mainCamera.view, local);
+        // Unproject the points on the near and far plane, with respect to the matrix we just created
+        XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom,
+            m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth,
+            m_projection, mainCamera.view, local);
 
-		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, mainCamera.view, local);
+        XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom,
+            m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth,
+            m_projection, mainCamera.view, local);
 
-		//turn the transformed points into our picking vector. 
-		XMVECTOR pickingVector = farPoint - nearPoint;
-		pickingVector = XMVector3Normalize(pickingVector);
+        // turn the transformed points into our picking vector
+        XMVECTOR pickingVector = farPoint - nearPoint;
+        pickingVector = XMVector3Normalize(pickingVector);
 
-		//loop through mesh list for object
-		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
-		{
-			//checking for ray intersection
-			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
-			{
-                //ensures camera always selects the nearest object in the picking ray
-                if (pickedDistance <= nearestObjDistance) 
+        // loop through mesh list for object
+        for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
+        {
+            // checking for ray intersection
+            if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
+            {
+                // ensures camera always selects the nearest object in the picking ray
+                if (pickedDistance <= nearestObjDistance)
                 {
-                    m_displayList[selectedID].ChangeColour(false);  //disable selection on last object selected (before new object is confirmed)
+                    //disable selection on last object selected before new one is confirmed
+                    if (selectedID >= 0 && selectedID < m_displayList.size())
+                    {
+                        m_displayList[selectedID].ChangeColour(false);
+                    }
+
                     nearestObjDistance = pickedDistance;
                     selectedID = i;
-                
-                    m_displayList[selectedID].ChangeColour(true);  //enable selection at the newly selected object ID
+
+                    //enable selection at the newly selected object ID
+                    m_displayList[selectedID].ChangeColour(true);
 
                     selectedObject.selectedId = i;
                     selectedObject.position = m_displayList[i].m_position;
                     selectedObject.rotation = m_displayList[i].m_orientation;
                     selectedObject.scale = m_displayList[i].m_scale;
                 }
+            }
+        }
+    }
 
-			}
-		}
-	}
+    //when an object is deleted some IDs were throwing a debug assertion
+    if (selectedID >= m_displayList.size())
+    {
+        selectedID = m_displayList.size() - 1;  //this makes it so the oject is set to a value within the vector if this happens
+    }
 
-	//if we got a hit.  return it.  
-	return selectedID;
+    return selectedID;
 }
+
 
 void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
 {
