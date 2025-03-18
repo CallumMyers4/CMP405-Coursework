@@ -23,6 +23,8 @@ ToolMain::ToolMain()
 	m_toolInputCommands.down			= false;
 	m_toolInputCommands.focus			= false;
 	m_toolInputCommands.ctrl			= false;
+	m_toolInputCommands.deleteKey		= false;
+	m_toolInputCommands.deleteKeyHeld	= false;
 	m_toolInputCommands.leftMouseDown	= false;
 	m_toolInputCommands.rightMouseDown	= false;
 	m_toolInputCommands.mouseX			= 0;
@@ -274,20 +276,21 @@ void ToolMain::addNewObject()
 	sqlite3_step(pResults);
 	sqlite3_finalize(pResults);
 	onActionLoad();
-
 	}
 }
 
 void ToolMain::DeleteObject()
 {
+	int ID = m_sceneGraph.at(m_d3dRenderer.selectedObject.selectedId).ID;
+
 	// Prepare the formatted debug message
 	wchar_t buffer[512];  // Buffer for formatted string
 
 	// Debug message for "false"
-	swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID is %d \n", m_d3dRenderer.selectedObject.selectedId);
+	swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID is %d \n", ID);
 	OutputDebugString(buffer);  // Output to the Debug window
 
-	if (m_d3dRenderer.selectedObject.selectedId > 0)
+	if (ID > 0)
 	{
 		//SQL
 		int rc;
@@ -296,7 +299,7 @@ void ToolMain::DeleteObject()
 
 		{
 			std::stringstream command;
-			command << "DELETE FROM Objects WHERE ID = " << m_d3dRenderer.selectedObject.selectedId << ";";
+			command << "DELETE FROM Objects WHERE ID = " << ID << ";";
 
 			std::string sqlCommand2 = command.str();
 			rc = sqlite3_prepare_v2(m_databaseConnection, sqlCommand2.c_str(), -1, &pResults, 0);
@@ -543,12 +546,17 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.ctrl = true;
 	}
 	else m_toolInputCommands.ctrl = false;
-	if (m_keyArray[46])
+
+	//checks if delete key is pressed, and also whether or not it was last frame too (turns from keyDown to keyPressed, couldnt find this in the
+	//framework)
+	if (m_keyArray[46] && !m_toolInputCommands.deleteKeyHeld)
 	{
 		m_toolInputCommands.deleteKey = true;
 	}
 	else
 		m_toolInputCommands.deleteKey = false;
+
+	m_toolInputCommands.deleteKeyHeld = m_keyArray[46];		//this line detects whether or not the key is being held
 }
 
 void ToolMain::ChangeMode(InputCommands::Modes newMode)

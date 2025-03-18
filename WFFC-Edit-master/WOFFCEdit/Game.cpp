@@ -628,13 +628,6 @@ int Game::MousePicking()
                     selectedObject.position = m_displayList[i].m_position;
                     selectedObject.rotation = m_displayList[i].m_orientation;
                     selectedObject.scale = m_displayList[i].m_scale;
-
-                    // Prepare the formatted debug message
-                    wchar_t buffer[512];  // Buffer for formatted string
-
-                    // Debug message for "false"
-                    swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of ID is %d \n", selectedObject.selectedId);
-                    OutputDebugString(buffer);  // Output to the Debug window
                 }
 
 			}
