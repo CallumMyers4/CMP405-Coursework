@@ -66,6 +66,9 @@ public:
 
 	//move objects
 	void UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph);
+	DirectX::SimpleMath::Vector2 DragByMouse();		//return the mouse movement since the last frame
+	POINT prevMousePos{ 0, 0};
+
 	SelectedObjectStruct selectedObject;
 	RECT		m_ScreenDimensions;
 
@@ -74,6 +77,7 @@ public:
 
 	//store all objects currently selected
 	std::vector<int> multiSelectObjIDs;
+	HWND wind;
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();

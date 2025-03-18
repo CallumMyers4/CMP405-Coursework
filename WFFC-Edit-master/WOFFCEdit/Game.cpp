@@ -46,6 +46,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_keyboard = std::make_unique<Keyboard>();
 
     m_mouse = std::make_unique<Mouse>();
+
     m_mouse->SetWindow(window);
 
     m_deviceResources->SetWindow(window, width, height);
@@ -61,6 +62,8 @@ void Game::Initialize(HWND window, int width, int height)
     standardCamera.Initialise();
 	mainCamera.Initialise();
 	focusCamera.Initialise();
+
+    wind = window;
 
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -156,6 +159,13 @@ void Game::Update(DX::StepTimer const& timer)
         mainCamera.lookDirection = focusCamera.lookDirection;
     }
     
+    
+    if (!m_InputCommands.ctrl)
+    {
+        prevMousePos.x = m_InputCommands.mouseX;
+        prevMousePos.y = m_InputCommands.mouseY;
+    }
+
     m_batchEffect->SetView(mainCamera.view);
     m_batchEffect->SetWorld(Matrix::Identity);
 	m_displayChunk.m_terrainEffect->SetView(mainCamera.view);
@@ -699,4 +709,21 @@ void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
     selectedObject.position.x = objInDisplay.m_position.x = objInScene.posX;
     selectedObject.position.y = objInDisplay.m_position.y = objInScene.posY;
     selectedObject.position.z = objInDisplay.m_position.z = objInScene.posZ;
+}
+
+DirectX::SimpleMath::Vector2 Game::DragByMouse()
+{
+    float deltaX = m_InputCommands.mouseX - prevMousePos.x;
+    float deltaY = m_InputCommands.mouseY - prevMousePos.y;
+
+    //make this mouse pos the prev for next frame
+    prevMousePos.x = m_InputCommands.mouseX;
+    prevMousePos.y = m_InputCommands.mouseY;
+
+    //convert to vector
+    DirectX::SimpleMath::Vector2 mouseDelta;
+    mouseDelta.x = deltaX;
+    mouseDelta.y = deltaY;
+
+    return mouseDelta;
 }

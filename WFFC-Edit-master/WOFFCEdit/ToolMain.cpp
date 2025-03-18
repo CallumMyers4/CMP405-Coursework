@@ -337,10 +337,20 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.leftMouseDown = false;
 	}
 
-	if (m_toolInputCommands.currentMode == InputCommands::Modes::translate)
+	if (m_toolInputCommands.currentMode == InputCommands::Modes::translate && m_toolInputCommands.ctrl)
 	{
-		objectTranslationDir.x = m_toolInputCommands.right - m_toolInputCommands.left;
-		objectTranslationDir.y = m_toolInputCommands.up - m_toolInputCommands.down;
+		// Prepare the formatted debug message
+		wchar_t buffer[512];  // Buffer for formatted string
+
+		// Debug message for "false"
+		swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of Y is %f\n");
+		OutputDebugString(buffer);  // Output to the Debug window
+
+		//store the change in mouse pos since last frame
+		DirectX::SimpleMath::Vector2 mouseChange = m_d3dRenderer.DragByMouse();
+
+		objectTranslationDir.x = mouseChange.x * 0.05f;//m_d3dRenderer.DragByMouse().x;// m_d3dRenderer.DragByMouse().x * 0.05f;//m_toolInputCommands.right - m_toolInputCommands.left;
+		objectTranslationDir.y = -mouseChange.y * 0.05f; //m_toolInputCommands.up - m_toolInputCommands.down;
 		objectTranslationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
 
 		Translate(objectTranslationDir);
