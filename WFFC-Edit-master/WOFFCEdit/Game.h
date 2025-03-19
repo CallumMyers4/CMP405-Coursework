@@ -2,6 +2,16 @@
 // Game.h
 //
 
+/* code for outputting to debug, remove in final build
+		// Prepare the formatted debug message
+		wchar_t buffer[512];  // Buffer for formatted string
+
+		// Debug message for "false"
+		swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of Y is %f\n");
+		OutputDebugString(buffer);  // Output to the Debug window
+
+*/
+
 #pragma once
 
 #include "DeviceResources.h"
@@ -60,16 +70,16 @@ public:
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
+	void UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph);		//display new objects as they are moved
 
 	//object selection
 	int	 MousePicking();
+	SelectedObjectStruct selectedObject;		//store the variables of the object currently being selected
 
 	//move objects
-	void UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph);
 	DirectX::SimpleMath::Vector2 DragByMouse();		//return the mouse movement since the last frame
-	POINT prevMousePos{ 0, 0};
+	POINT prevMousePos{ 0, 0};		//get the point of the mouse during the last frame
 
-	SelectedObjectStruct selectedObject;
 	RECT		m_ScreenDimensions;
 
 	//empty camera which will store the variables of the camera currently active
@@ -77,7 +87,6 @@ public:
 
 	//store all objects currently selected
 	std::vector<int> multiSelectObjIDs;
-	HWND wind;
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -97,11 +106,12 @@ private:
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 
-	//cameras (the camera which will pass vars, the camera for focusing on objects and the normal one which allows user to move around the scene)
+	//cameras (the camera for focusing on objects and the normal one which allows user to move around the scene)
 	Camera focusCamera, standardCamera;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off
+	HWND wind;		//a reference to the window (couldn't find any GetWindow() functions)
 	int selectedID = 0;						//the ID of the object currently selected
 
 	// Device resources.

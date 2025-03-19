@@ -100,6 +100,7 @@ void Game::Tick(InputCommands *Input)
 {
 	//copy over the input commands so we have a local version to use elsewhere.
 	m_InputCommands = *Input;
+
     m_timer.Tick([&]()
     {
         Update(m_timer);
@@ -121,19 +122,19 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-    //if the focus key is also being held then focus camera to object
+    //if the focus key is pressed then focus camera to currently selected object
     if (m_InputCommands.focus)
     {
-        standardCamera.cameraActive = false;
-        focusCamera.cameraActive = true;
+        standardCamera.cameraActive = false;        //deactivate moving cam
+        focusCamera.cameraActive = true;        //activate focus cam
 
         //set the camera to focus on the selected object
         focusCamera.FocusOnObject(selectedObject.position);
     }
     if (m_InputCommands.unfocus)   //if user presses the focus button again then go back to the normal camera
     {
-        standardCamera.cameraActive = true;
-        focusCamera.cameraActive = false;
+        standardCamera.cameraActive = true;     //activate moving cam
+        focusCamera.cameraActive = false;       ////deactivate focus cam
     }
 
     //if using the normal camera then allow user inputs, and set the main camera's view/pos to match standard camera
@@ -159,14 +160,14 @@ void Game::Update(DX::StepTimer const& timer)
         mainCamera.lookDirection = focusCamera.lookDirection;
     }
     
-    
+    //whilst not moving around objects, update previous mouse pos, prevents the objects snapping next time they press control
     if (!m_InputCommands.ctrl)
     {
         prevMousePos.x = m_InputCommands.mouseX;
         prevMousePos.y = m_InputCommands.mouseY;
     }
 
-    m_batchEffect->SetView(mainCamera.view);
+    m_batchEffect->SetView(mainCamera.view);        //update the view to current active camera
     m_batchEffect->SetWorld(Matrix::Identity);
 	m_displayChunk.m_terrainEffect->SetView(mainCamera.view);
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
@@ -215,7 +216,7 @@ void Game::Render()
     m_deviceResources->PIXBeginEvent(L"Render");
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-	if (m_grid)
+    if (m_grid)
 	{
 		// Draw procedurally generated dynamic grid
 		const XMVECTORF32 xaxis = { 512.f, 0.f, 0.f };
@@ -593,9 +594,10 @@ std::wstring StringToWCHART(std::string s)
 	return r;
 }
 
+//adapted from week 6 lab
 int Game::MousePicking()
 {
-    float pickedDistance = 0;
+    float pickedDistance = 0;   //he distance to the object being picked
     float nearestObjDistance = 1000;    // the distance to the object nearest the cam when selected
 
     // setup near and far planes of frustum with mouse X and mouse Y passed down from ToolMain
@@ -636,12 +638,13 @@ int Game::MousePicking()
             // checking for ray intersection
             if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
             {
-                // ensures camera always selects the nearest object in the picking ray
+                //ensures camera always selects the nearest object in the picking ray
                 if (pickedDistance <= nearestObjDistance)
                 {
-                    nearestObjDistance = pickedDistance;
+                    nearestObjDistance = pickedDistance;    //the new nearest object is now this one
                     selectedID = i;
 
+                    //update the selectedobject struct to match the object selected
                     selectedObject.selectedId = i;
                     selectedObject.position = m_displayList[i].m_position;
                     selectedObject.rotation = m_displayList[i].m_orientation;
@@ -666,7 +669,8 @@ int Game::MousePicking()
         //add to vector of selected objects
         multiSelectObjIDs.push_back(selectedID);
     }
-    else     //otherwise just empty it and keep it only filled with the current selection
+    else     //otherwise just empty it and keep it only filled with the current selection (this allows me to move/rotate/scale all from the same
+            //function, without needing seperate ones based on how many objects are being selected)
     {
         int curID = 0;  //for running through the vector
 
@@ -681,31 +685,33 @@ int Game::MousePicking()
             }
         }
 
-        multiSelectObjIDs.clear();
-        multiSelectObjIDs.push_back(selectedID);
+        multiSelectObjIDs.clear();  //empty the vector
+        multiSelectObjIDs.push_back(selectedID);    //add the current object to the vector
 
         //highlight the new object
         m_displayList[selectedID].ChangeColour(true);
     }
 
-    return selectedID;
+    return selectedID;      //return the ID of the current object
 }
-
 
 void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
 {
-    DisplayObject& objInDisplay = m_displayList.at(objectID);
-    SceneObject& objInScene = sceneGraph->at(objectID);
+    DisplayObject& objInDisplay = m_displayList[objectID];   //get the object being displayed
+    SceneObject& objInScene = sceneGraph->at(objectID);         //get the object in the world scene
 
+    //match the object's scake in the display to match its scale in the world
     objInDisplay.m_scale.x = objInScene.scaX;
     objInDisplay.m_scale.y = objInScene.scaY;
     objInDisplay.m_scale.z = objInScene.scaZ;
-    objInDisplay.m_scale.z = objInScene.scaZ;
 
+    //match the object's rotation in the display to match its scale in the world
     objInDisplay.m_orientation.x = objInScene.rotX;
     objInDisplay.m_orientation.y = objInScene.rotY;
     objInDisplay.m_orientation.z = objInScene.rotZ;
 
+    //match the object's position in the display to match where it is in the world
+    //also updates the selectedObject struct so that the camera can use it if focusing on it
     selectedObject.position.x = objInDisplay.m_position.x = objInScene.posX;
     selectedObject.position.y = objInDisplay.m_position.y = objInScene.posY;
     selectedObject.position.z = objInDisplay.m_position.z = objInScene.posZ;
@@ -713,6 +719,7 @@ void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
 
 DirectX::SimpleMath::Vector2 Game::DragByMouse()
 {
+    //calculate distance the mouse has moved since last frame
     float deltaX = m_InputCommands.mouseX - prevMousePos.x;
     float deltaY = m_InputCommands.mouseY - prevMousePos.y;
 

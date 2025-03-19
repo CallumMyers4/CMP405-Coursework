@@ -34,13 +34,17 @@ DisplayObject::~DisplayObject()
 void DisplayObject::ChangeColour(bool enable)
 {
 	//https://github.com/microsoft/DirectXTK/wiki/Rendering-a-model
+
+	//add fog to the model
 	m_model->UpdateEffects([enable](DirectX::IEffect* effect)
 	{
-		auto highlightFog = dynamic_cast<DirectX::IEffectFog*>(effect);
+		auto highlightFog = dynamic_cast<DirectX::IEffectFog*>(effect);		//make a fog effect
+
+		//as long as fog was made right
 		if (highlightFog != nullptr)
 		{
-			highlightFog->SetFogEnabled(enable);
-			highlightFog->SetFogColor(DirectX::Colors::Yellow);
+			highlightFog->SetFogEnabled(enable);	//either enable or disable the effect based on the parameter input
+			highlightFog->SetFogColor(DirectX::Colors::WhiteSmoke);		//make model white
 		}
 	});
 }

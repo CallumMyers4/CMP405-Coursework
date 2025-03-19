@@ -118,6 +118,7 @@ void MFCMain::PasteSelected()
 	m_ToolSystem.addNewObject();
 }
 
+//switch the mode in toolMain
 void MFCMain::NormalMode()
 {
 	m_ToolSystem.ChangeMode(InputCommands::Modes::normal);

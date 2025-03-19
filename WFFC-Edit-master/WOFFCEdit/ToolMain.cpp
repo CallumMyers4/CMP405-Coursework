@@ -337,52 +337,47 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.leftMouseDown = false;
 	}
 
-	if (m_toolInputCommands.currentMode == InputCommands::Modes::translate && m_toolInputCommands.ctrl)
+	//if holding the control key
+	if (m_toolInputCommands.ctrl)
 	{
-		// Prepare the formatted debug message
-		wchar_t buffer[512];  // Buffer for formatted string
-
-		// Debug message for "false"
-		swprintf(buffer, sizeof(buffer) / sizeof(wchar_t), L"Debug: The value of Y is %f\n");
-		OutputDebugString(buffer);  // Output to the Debug window
-
 		//store the change in mouse pos since last frame
+		//note: use -.y because moving down returns a positive, up returns negative, whereas world is the opposite
 		DirectX::SimpleMath::Vector2 mouseChange = m_d3dRenderer.DragByMouse();
 
-		objectTranslationDir.x = mouseChange.x * 0.05f;//m_d3dRenderer.DragByMouse().x;// m_d3dRenderer.DragByMouse().x * 0.05f;//m_toolInputCommands.right - m_toolInputCommands.left;
-		objectTranslationDir.y = -mouseChange.y * 0.05f; //m_toolInputCommands.up - m_toolInputCommands.down;
-		objectTranslationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+		//a switch state which decides whether to move, rotate or scale the object
+		switch (m_toolInputCommands.currentMode)
+		{
+			case InputCommands::Modes::translate:
+				//move object according to mouse movement
+				objectTranslationDir.x = mouseChange.x * 0.05f;
+				objectTranslationDir.y = -mouseChange.y * 0.05f;
+				objectTranslationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+				Translate(objectTranslationDir);	//translate the object
+				break;
 
-		Translate(objectTranslationDir);
+			case InputCommands::Modes::rotate:
+				//rotate object according to mouse movement
+				objectRotationDir.x = mouseChange.x * 0.05f;
+				objectRotationDir.y = -mouseChange.y * 0.05f;
+				objectRotationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+				Rotate(objectRotationDir);		//rotate the object
+				break;
+
+			case InputCommands::Modes::scale:
+				//scale object according to mouse movement
+				objectScaleDir.x = mouseChange.x * 0.05f;
+				objectScaleDir.y = -mouseChange.y * 0.05f;
+				objectScaleDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
+				Scale(objectScaleDir);		//scale the object
+				break;
+		}
 	}
-	else if (m_toolInputCommands.currentMode == InputCommands::Modes::rotate)
-	{
-		objectRotationDir.x = m_toolInputCommands.right - m_toolInputCommands.left;
-		objectRotationDir.y = m_toolInputCommands.up - m_toolInputCommands.down;
-		objectRotationDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
 
-		Rotate(objectRotationDir);
-	}
-	else if (m_toolInputCommands.currentMode == InputCommands::Modes::scale)
-	{
-		objectScaleDir.x = m_toolInputCommands.right - m_toolInputCommands.left;
-		objectScaleDir.y = m_toolInputCommands.up - m_toolInputCommands.down;
-		objectScaleDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
-
-		Scale(objectScaleDir);
-	}
-
+	//delete the selected item if pressing delete
 	if (m_toolInputCommands.deleteKey)
 	{
 		DeleteObject();
 	}
-
-	//do we have a mode
-	//are we clicking / dragging /releasing
-	//has something changed
-		//update Scenegraph
-		//add to scenegraph
-		//resend scenegraph to Direct X renderer
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
@@ -390,7 +385,6 @@ void ToolMain::Tick(MSG *msg)
 
 void ToolMain::UpdateInput(MSG * msg)
 {
-
 	switch (msg->message)
 	{
 		//Global inputs,  mouse position and keys etc
@@ -449,6 +443,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.right = false;
 
+	//move cam up/down
 	if (m_keyArray['E'])
 	{
 		m_toolInputCommands.up = true;
@@ -461,6 +456,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.down = false;
 
+	//focus/unfocus
 	if (m_keyArray['F'])
 	{
 		m_toolInputCommands.focus = true;
@@ -487,8 +483,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.shift = false;
 
-	//checks if delete key is pressed, and also whether or not it was last frame too (turns from keyDown to keyPressed, couldnt find this in the
-	//framework)
+	//checks if delete key is pressed
 	if (m_keyArray[46] && !m_toolInputCommands.deleteKeyHeld)
 	{
 		m_toolInputCommands.deleteKey = true;
@@ -496,7 +491,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	else
 		m_toolInputCommands.deleteKey = false;
 
-	m_toolInputCommands.deleteKeyHeld = m_keyArray[46];		//this line detects whether or not the key is being held
+	m_toolInputCommands.deleteKeyHeld = m_keyArray[46];		//delete key should only fire once, this is a flag to check if held or pressed
 }
 
 void ToolMain::ChangeMode(InputCommands::Modes newMode)
@@ -508,10 +503,10 @@ void ToolMain::Translate(DirectX::SimpleMath::Vector3 direction)
 {
 	int curID = 0;
 
-	//delete all objects currently in the selection array
+	//run through all objects currently in the selection array
 	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
-		curID = m_d3dRenderer.multiSelectObjIDs[i];
+		curID = m_d3dRenderer.multiSelectObjIDs[i];		//stores the position of the object in the sceneGraph (stored in the vector)
 
 		//checks it is within the database (below 0 = terrain)
 		if (curID > 0)
@@ -521,6 +516,7 @@ void ToolMain::Translate(DirectX::SimpleMath::Vector3 direction)
 			object->posY += direction.y;	//move up/down based on direction (1 = up, -1 = down)
 			object->posZ += direction.z;	//move forward/back based on direction (1 = forward, -1 = backward)
 
+			//update the object on the display to match where it now is in the scene world
 			m_d3dRenderer.UpdateDisplayList(curID, &m_sceneGraph);
 		}
 	}
@@ -531,7 +527,7 @@ void ToolMain::Rotate(DirectX::SimpleMath::Vector3 direction)
 {
 	int curID = 0;
 
-	//delete all objects currently in the selection array
+	//run through all objects currently in the selection array
 	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
 		curID = m_d3dRenderer.multiSelectObjIDs[i];
@@ -555,7 +551,7 @@ void ToolMain::Scale(DirectX::SimpleMath::Vector3 direction)
 {
 	int curID = 0;
 
-	//delete all objects currently in the selection array
+	//run through all objects currently in the selection array
 	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
 		curID = m_d3dRenderer.multiSelectObjIDs[i];

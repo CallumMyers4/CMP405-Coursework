@@ -26,17 +26,17 @@ public:
 	DirectX::SimpleMath::Vector3 camUp;
 
 	DirectX::SimpleMath::Matrix view;	//view calculation
-	float sensitivity = 5.0f, moveSpeed = 1.5f;	//mouse sensitivity and movement speed
-	float xOffset = 2 , yOffset = 1, zOffset = -3;	//how much to offset the focus camera's osition compared to the object
-	bool cameraActive;
+	bool cameraActive = false;		//decide if this camera is in use
 
 private:
 	//internal functions
 	void RotateCamera();
 	void MoveCamera();
+	float sensitivity = 0.5f, moveSpeed = 1.5f;		//------------------------------------------------------ADD THIS TO A DIALOGUE WINDOW----------------------------------
 
 	//internal vars
 	float prevMouseX, prevMouseY;	//where to compare the mouse's current pos to when moving, usually the position last frame
 	bool cameraStart = true;	//whether or not the camera has just started moving (i.e. when the mouse button is first clicked)
+	DirectX::SimpleMath::Vector3 objectOffset{ 2, 1, -3 };		//how far from the focus object to move the camera
 	InputCommands inputs;	//reference to input commands (when mouse/kb is pressed)
 };
