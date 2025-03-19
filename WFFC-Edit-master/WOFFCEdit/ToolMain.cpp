@@ -370,6 +370,9 @@ void ToolMain::Tick(MSG *msg)
 				objectScaleDir.z = m_toolInputCommands.forward - m_toolInputCommands.back;
 				Scale(objectScaleDir);		//scale the object
 				break;
+
+			case InputCommands::Modes::normal:
+				break;
 		}
 	}
 
