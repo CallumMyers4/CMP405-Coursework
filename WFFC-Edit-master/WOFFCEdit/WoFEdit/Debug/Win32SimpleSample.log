@@ -29,10 +29,11 @@ C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework
 C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(153,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(202,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(227,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(354,58): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(362,55): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(370,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(510,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(534,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(558,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(232,13): warning C4018: '<': signed/unsigned mismatch
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(356,58): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(364,55): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(372,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(518,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(542,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(566,20): warning C4018: '<': signed/unsigned mismatch
   Win32SimpleSample.vcxproj -> C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Debug\WoFEdit.exe

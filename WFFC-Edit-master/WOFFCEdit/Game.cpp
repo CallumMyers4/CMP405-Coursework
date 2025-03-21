@@ -681,7 +681,11 @@ int Game::MousePicking()
             if (multiSelectObjIDs.size() > 0)
             {
                 curID = multiSelectObjIDs[i];   //set the ID to move to be the ID in the current pos of the vector
-                m_displayList[curID].ChangeColour(false);
+
+                //catches the edge case where it will try to disable the selection on a deleted object, which threw a vector out of range assertion
+                //this just makes sure the object it is trying to deselect still exists
+                if (curID < m_displayList.size())
+                    m_displayList[curID].ChangeColour(false);
             }
         }
 

@@ -228,7 +228,9 @@ void ToolMain::DeleteObject()
 	{
 		curID = m_d3dRenderer.multiSelectObjIDs[i];
 
-		m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
+		//check to make sure it still exists (sometimes double clicking delete can cause problems)
+		if (curID < m_sceneGraph.size())
+			m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
 	}
 
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
@@ -373,6 +375,11 @@ void ToolMain::Tick(MSG *msg)
 
 			case InputCommands::Modes::normal:
 				break;
+		}
+
+		if (m_keyArray['V'])
+		{
+			addNewObject();
 		}
 	}
 
