@@ -21,6 +21,7 @@ struct InputCommands
 	bool up;
 	bool down;
 	bool focus, unfocus;
+	bool paste, pasteHeld;
 	bool deleteKey, deleteKeyHeld;		//the second var will check if delete is being held, then prevent it from deleting multiple
 	bool rotRight;
 	bool rotLeft;

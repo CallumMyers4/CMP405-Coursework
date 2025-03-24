@@ -24,6 +24,8 @@ ToolMain::ToolMain()
 	m_toolInputCommands.focus			= false;
 	m_toolInputCommands.ctrl			= false;
 	m_toolInputCommands.shift			= false;
+	m_toolInputCommands.paste			= false;
+	m_toolInputCommands.pasteHeld		= false;
 	m_toolInputCommands.deleteKey		= false;
 	m_toolInputCommands.deleteKeyHeld	= false;
 	m_toolInputCommands.leftMouseDown	= false;
@@ -377,10 +379,18 @@ void ToolMain::Tick(MSG *msg)
 				break;
 		}
 
-		if (m_keyArray['V'])
+		//if pressing V whilst holding ctrl, paste (pasteHeld prevents pasting multiple at once)
+		if (m_toolInputCommands.paste && !m_toolInputCommands.pasteHeld)
 		{
+			m_toolInputCommands.pasteHeld = true;
 			addNewObject();
 		}
+	}
+	
+	//reset pasteHeld when user releases
+	if (!m_toolInputCommands.paste)
+	{
+		m_toolInputCommands.pasteHeld = false;
 	}
 
 	//delete the selected item if pressing delete
@@ -478,7 +488,15 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.unfocus = true;
 	}
 	else m_toolInputCommands.unfocus = false;
-	
+
+	//paste
+	if (m_keyArray['V'])
+	{
+		m_toolInputCommands.paste = true;
+	}
+	else
+		m_toolInputCommands.paste = false;
+
 	//checks for control key being entered
 	if (m_keyArray[17])
 	{
