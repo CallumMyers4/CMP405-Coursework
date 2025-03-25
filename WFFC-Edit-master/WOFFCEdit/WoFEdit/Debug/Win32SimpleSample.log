@@ -1,39 +1,8 @@
-﻿  ToolMain.cpp
+﻿  MFCMain.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(103,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(104,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(105,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(106,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(107,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(108,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(109,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(110,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(111,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(123,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(124,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(125,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(129,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(130,47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(131,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(135,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(136,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(146,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(147,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(148,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(149,58): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(150,58): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(151,58): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(152,59): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(153,56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(154,54): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(155,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(204,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(229,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(234,13): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(358,58): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(366,55): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(374,52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(535,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(559,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\ToolMain.cpp(583,20): warning C4018: '<': signed/unsigned mismatch
+  Main.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+  SelectDialogue.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+  Generating Code...
   Win32SimpleSample.vcxproj -> C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Debug\WoFEdit.exe
