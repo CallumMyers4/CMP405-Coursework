@@ -214,10 +214,38 @@ void ToolMain::PasteObject()
 		//give a slight offset to pos
 		pastedObject.posX += 5;
 		pastedObject.posZ += 3;
-
 		m_sceneGraph.push_back(pastedObject);		//add new object to scene graph
 	}
 
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
+}
+
+void ToolMain::CreateNewObject(std::string model, std::string tex, 
+								DirectX::SimpleMath::Vector3 position, DirectX::SimpleMath::Vector3 scale, DirectX::SimpleMath::Vector3 rotation)
+{
+	//creates a new object with some base variables (i.e. all of the ones at the end of the DB which are the same for all objects; lights, audio, etc.)
+	SceneObject newObject = m_sceneGraph[0];
+
+	//add to the end of the scene graph to get a unique ID
+	newObject.ID = m_sceneGraph.size() + 1;
+
+	//set variables to ones passed as parameter
+	newObject.posX = position.x;
+	newObject.posY = position.y;
+	newObject.posZ = position.z;
+
+	newObject.scaX = scale.x;
+	newObject.scaY = scale.y;
+	newObject.scaZ = scale.z;
+
+	newObject.rotX = rotation.x;
+	newObject.rotY = rotation.y;
+	newObject.rotZ = rotation.z;
+
+	newObject.model_path = model;
+	newObject.tex_diffuse_path = tex;
+
+	m_sceneGraph.push_back(newObject);		//add new object to scene graph
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
 }
 

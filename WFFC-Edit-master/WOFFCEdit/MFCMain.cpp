@@ -127,7 +127,7 @@ void MFCMain::MenuEditCreate()
 	//modeless dialogue must be declared in the class.   If we do local it will go out of scope instantly and destroy itself
 	m_ToolCreateDialogue.Create(IDD_DIALOG2);	//Start up modeless
 	m_ToolCreateDialogue.ShowWindow(SW_SHOW);	//show modeless
-	m_ToolCreateDialogue.SetFields(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject);
+	m_ToolCreateDialogue.SetFields(&m_ToolSystem);
 }
 
 //switch the mode in toolMain

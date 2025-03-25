@@ -28,7 +28,6 @@ private:
 	CRect WindowRECT;	//Window area rectangle. 
 	SelectDialogue m_ToolSelectDialogue;			//for modeless dialogue, declare it here
 	CreateDialogue m_ToolCreateDialogue;			//for modeless dialogue, declare it here
-
 	int m_width;		
 	int m_height;
 	

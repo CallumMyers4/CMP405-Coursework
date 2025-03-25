@@ -3,6 +3,7 @@
 #include "resource.h"
 #include "afxwin.h"
 #include "SceneObject.h"
+#include "ToolMain.h"
 #include <vector>
 
 class CreateDialogue : public CDialogEx
@@ -10,10 +11,13 @@ class CreateDialogue : public CDialogEx
 	DECLARE_DYNAMIC(CreateDialogue);
 
 	public:
-		CreateDialogue(CWnd* pParent, std::vector<SceneObject>* SceneGraph);   // modal // takes in out scenegraph in the constructor
-		CreateDialogue(CWnd* pParent = NULL);
+		CreateDialogue(CWnd* pParent);   // modal // takes in out scenegraph in the constructor
+		CreateDialogue();
 		virtual ~CreateDialogue();
-		void SetFields(std::vector<SceneObject>* SceneGraph, int* Selection); //passing in pointers to the data the class will operate on.
+		void SetFields(ToolMain* toolMain); //passing in pointers to the data the class will operate on.
+
+		std::string selectedTex, selectedModel;		//the paths to selected texture/model
+		DirectX::SimpleMath::Vector3 position, rotation, scale;		//the paths to selected texture/model
 
 
 	// Dialog Data
@@ -27,10 +31,6 @@ class CreateDialogue : public CDialogEx
 		afx_msg void SelectModel();		//when user chooses a model from dropdown
 		afx_msg void SelectTexture();		//when user chooses a texture from dropdown
 		afx_msg void CreateObject();	//Item has been selected
-
-		std::vector<SceneObject>* m_sceneGraph;
-		std::string selectedTex, selectedModel;
-		int* m_currentSelection;
 
 		std::vector<std::string> texturePaths
 		{
@@ -47,7 +47,10 @@ class CreateDialogue : public CDialogEx
 			"database/data/objFence.cmo",		//fence
 		};
 
+		ToolMain* m_toolSystem;
+
 		DECLARE_MESSAGE_MAP()
+
 	public:
 		//references to dropdowns
 		//https://learn.microsoft.com/en-us/cpp/mfc/reference/ccombobox-class?view=msvc-170

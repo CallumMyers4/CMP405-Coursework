@@ -19,8 +19,10 @@ public: //methods
 	int		getCurrentSelectionID();										//returns the selection number of currently selected object so that It can be displayed.
 	void	onActionInitialise(HWND handle, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionLoad();													//load the current chunk
-	void	PasteObject();													//add a new object to the database
-	void	DeleteObject();													//add a new object to the database
+	void	PasteObject();													//create new instance of current selection to scene graph
+	void	CreateNewObject(std::string model, std::string tex,				//add a new object to the scene graph
+			DirectX::SimpleMath::Vector3 position, DirectX::SimpleMath::Vector3 scale, DirectX::SimpleMath::Vector3 rotation);
+	void	DeleteObject();													//delete object from scene graph
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
 

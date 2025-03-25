@@ -17,14 +17,12 @@ BEGIN_MESSAGE_MAP(CreateDialogue, CDialogEx)
 END_MESSAGE_MAP()
 
 
-CreateDialogue::CreateDialogue(CWnd* pParent, std::vector<SceneObject>* SceneGraph)		//constructor used in modal
+CreateDialogue::CreateDialogue(CWnd* pParent)		//constructor used in modal
 	: CDialogEx(IDD_DIALOG2, pParent)
 {
-	m_sceneGraph = SceneGraph;
 }
 
-CreateDialogue::CreateDialogue(CWnd* pParent)			//constructor used in modeless
-	: CDialogEx(IDD_DIALOG2, pParent)
+CreateDialogue::CreateDialogue() : CDialogEx(IDD_DIALOG2)
 {
 }
 
@@ -33,13 +31,9 @@ CreateDialogue::~CreateDialogue()
 }
 
 ///pass through pointers to the data in the tool we want to manipulate
-void CreateDialogue::SetFields(std::vector<SceneObject>* SceneGraph, int* selection)
+void CreateDialogue::SetFields(ToolMain* toolMain)
 {
-	m_sceneGraph = SceneGraph;
-	m_currentSelection = selection;
-
-	//dropdowns
-
+	m_toolSystem = toolMain;		//refernce to the toolMain class (for making new objects)
 
 	//position, rotation and scale fields
 	//https://stackoverflow.com/questions/21865034/how-to-set-a-default-value-for-edit-control-box-in-a-dialog-that-is-added-to-m
@@ -66,6 +60,10 @@ void CreateDialogue::SetFields(std::vector<SceneObject>* SceneGraph, int* select
 	m_textureComboBox.AddString(_T("Tiny Skin"));
 	m_textureComboBox.AddString(_T("Ceramic"));
 	m_textureComboBox.SetCurSel(0);
+
+	//give default values to prevent errors
+	selectedModel = modelPaths[0];
+	selectedTex = modelPaths[0];
 }
 
 
@@ -91,14 +89,37 @@ void CreateDialogue::SelectModel()
 void CreateDialogue::SelectTexture()
 {
 	int selection = m_textureComboBox.GetCurSel();
+
 	selectedTex = texturePaths[selection];
 }
 
 void CreateDialogue::CreateObject()
 {
-	CString message;
-	message.Format(_T("Object would be created now..."));
-	AfxMessageBox(message);
+	CString input;
+
+	GetDlgItem(IDC_EDIT1)->GetWindowText(input);
+	position.x = _ttoi(input);
+	GetDlgItem(IDC_EDIT2)->GetWindowText(input);
+	position.y = _ttoi(input);
+	GetDlgItem(IDC_EDIT3)->GetWindowText(input);
+	position.z = _ttoi(input);
+
+	GetDlgItem(IDC_EDIT4)->GetWindowText(input);
+	scale.x = _ttoi(input);
+	GetDlgItem(IDC_EDIT5)->GetWindowText(input);
+	scale.y = _ttoi(input);
+	GetDlgItem(IDC_EDIT6)->GetWindowText(input);
+	scale.z = _ttoi(input);
+
+	GetDlgItem(IDC_EDIT7)->GetWindowText(input);
+	rotation.x = _ttoi(input);
+	GetDlgItem(IDC_EDIT8)->GetWindowText(input);
+	rotation.y = _ttoi(input);
+	GetDlgItem(IDC_EDIT9)->GetWindowText(input);
+	rotation.z = _ttoi(input);
+
+	//create a new object with parameters from the fields
+	m_toolSystem->CreateNewObject(selectedModel, selectedTex, position, scale, rotation);
 
 	End();
 }
