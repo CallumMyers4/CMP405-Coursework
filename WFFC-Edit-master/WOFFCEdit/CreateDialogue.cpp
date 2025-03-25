@@ -10,7 +10,7 @@ IMPLEMENT_DYNAMIC(CreateDialogue, CDialogEx)
 
 //Message map.  Just like MFCMAIN.cpp.  This is where we catch button presses etc and point them to a handy dandy method.
 BEGIN_MESSAGE_MAP(CreateDialogue, CDialogEx)
-	ON_COMMAND(IDOK, &CreateDialogue::End)					//ok button
+	ON_COMMAND(IDC_BUTTON2, &CreateDialogue::End)					//ok button
 	ON_BN_CLICKED(IDOK, &CreateDialogue::OnBnClickedOk)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CreateDialogue::Select)	//listbox
 END_MESSAGE_MAP()
