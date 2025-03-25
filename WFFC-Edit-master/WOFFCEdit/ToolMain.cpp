@@ -196,7 +196,7 @@ void ToolMain::onActionLoad()
 }
 
 //allows user to add new objects as needed
-void ToolMain::addNewObject()
+void ToolMain::PasteObject()
 {
 	int curID = 0;
 
@@ -383,7 +383,7 @@ void ToolMain::Tick(MSG *msg)
 		if (m_toolInputCommands.paste && !m_toolInputCommands.pasteHeld)
 		{
 			m_toolInputCommands.pasteHeld = true;
-			addNewObject();
+			PasteObject();
 		}
 	}
 	

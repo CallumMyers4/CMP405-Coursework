@@ -12,6 +12,8 @@ IMPLEMENT_DYNAMIC(CreateDialogue, CDialogEx)
 BEGIN_MESSAGE_MAP(CreateDialogue, CDialogEx)
 	ON_COMMAND(IDC_BUTTON1, &CreateDialogue::CreateObject)	//create button
 	ON_COMMAND(IDC_BUTTON2, &CreateDialogue::End)					//cancel/exit button
+	ON_CBN_SELCHANGE(IDC_COMBO1, &CreateDialogue::SelectModel)	//model dropdown selected
+	ON_CBN_SELCHANGE(IDC_COMBO2, &CreateDialogue::SelectTexture)	//model dropdown selected
 END_MESSAGE_MAP()
 
 
@@ -52,10 +54,18 @@ void CreateDialogue::SetFields(std::vector<SceneObject>* SceneGraph, int* select
 	GetDlgItem(IDC_EDIT9)->SetWindowText(L"0");
 
 	//dropdown fields
+	//models
 	m_modelComboBox.AddString(_T("Box"));
-	m_modelComboBox.AddString(_T("Not Box"));
+	m_modelComboBox.AddString(_T("Fence"));
+	m_modelComboBox.SetCurSel(0);	//default value
+
+	//textures
 	m_textureComboBox.AddString(_T("Placeholder"));
-	m_textureComboBox.AddString(_T("The other one"));
+	m_textureComboBox.AddString(_T("Error"));
+	m_textureComboBox.AddString(_T("Rock"));
+	m_textureComboBox.AddString(_T("Tiny Skin"));
+	m_textureComboBox.AddString(_T("Ceramic"));
+	m_textureComboBox.SetCurSel(0);
 }
 
 
@@ -71,16 +81,26 @@ void CreateDialogue::End()
 	DestroyWindow();	//destory the window properly.  INcluding the links and pointers created.  THis is so the dialogue can start again. 
 }
 
+void CreateDialogue::SelectModel()
+{
+	int selection = m_modelComboBox.GetCurSel();
+
+	selectedModel = modelPaths[selection];
+}
+
+void CreateDialogue::SelectTexture()
+{
+	int selection = m_textureComboBox.GetCurSel();
+	selectedTex = texturePaths[selection];
+}
+
 void CreateDialogue::CreateObject()
 {
-	/*
-	int index = m_listBox.GetCurSel();
-	CString currentSelectionValue;
+	CString message;
+	message.Format(_T("Object would be created now..."));
+	AfxMessageBox(message);
 
-	m_listBox.GetText(index, currentSelectionValue);
-
-	*m_currentSelection = _ttoi(currentSelectionValue);
-	*/
+	End();
 }
 
 BOOL CreateDialogue::OnInitDialog()

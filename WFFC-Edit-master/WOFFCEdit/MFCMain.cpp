@@ -116,7 +116,7 @@ void MFCMain::ToolBarButton1()
 //paste the selected object
 void MFCMain::PasteSelected()
 {
-	m_ToolSystem.addNewObject();
+	m_ToolSystem.PasteObject();
 }
 
 void MFCMain::MenuEditCreate()

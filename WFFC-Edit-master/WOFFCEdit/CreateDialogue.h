@@ -24,21 +24,36 @@ class CreateDialogue : public CDialogEx
 	protected:
 		virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 		afx_msg void End();		//kill the dialogue
+		afx_msg void SelectModel();		//when user chooses a model from dropdown
+		afx_msg void SelectTexture();		//when user chooses a texture from dropdown
 		afx_msg void CreateObject();	//Item has been selected
 
 		std::vector<SceneObject>* m_sceneGraph;
+		std::string selectedTex, selectedModel;
 		int* m_currentSelection;
 
+		std::vector<std::string> texturePaths
+		{
+			"database/data/placeholder.dds",		//placeholder
+			"database/data/Error.dds",				//error
+			"database/data/rock.dds",				//rock
+			"database/data/Tiny_skin.dds"			//tiny skin
+			"database/data/ceramic.dds"				//ceramic
+		};
+
+		std::vector<std::string> modelPaths
+		{
+			"database/data/placeholder.cmo",		//placeholder
+			"database/data/objFence.cmo",		//fence
+		};
 
 		DECLARE_MESSAGE_MAP()
 	public:
-		// Control variable for more efficient access of the listbox
+		//references to dropdowns
 		//https://learn.microsoft.com/en-us/cpp/mfc/reference/ccombobox-class?view=msvc-170
 		CComboBox m_modelComboBox, m_textureComboBox;
 		virtual BOOL OnInitDialog() override;
 		virtual void PostNcDestroy();
-		afx_msg void OnBnClickedOk();
-		afx_msg void OnLbnSelchangeList1();
 };
 
 INT_PTR CALLBACK SelectProc(HWND   hwndDlg, UINT   uMsg, WPARAM wParam, LPARAM lParam);
