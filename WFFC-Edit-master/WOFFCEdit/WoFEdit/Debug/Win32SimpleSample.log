@@ -1,8 +1,1 @@
-﻿  MFCMain.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-  Main.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-  SelectDialogue.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-  Generating Code...
-  Win32SimpleSample.vcxproj -> C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Debug\WoFEdit.exe
+﻿  Win32SimpleSample.vcxproj -> C:\Users\callu\OneDrive\Documents\University\Tools Programming\CMP405-Coursework\WFFC-Edit-master\WOFFCEdit\Debug\WoFEdit.exe

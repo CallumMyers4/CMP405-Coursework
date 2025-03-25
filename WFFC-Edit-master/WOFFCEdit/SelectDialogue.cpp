@@ -74,6 +74,7 @@ BOOL SelectDialogue::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+
 	//uncomment for modal only
 /*	//roll through all the objects in the scene graph and put an entry for each in the listbox
 	int numSceneObjects = m_sceneGraph->size();

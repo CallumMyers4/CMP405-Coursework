@@ -5,7 +5,8 @@
 BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_QUIT,	&MFCMain::MenuFileQuit)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
-	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::PasteSelected)
+	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
+	ON_COMMAND(ID_EDIT_CREATEOBJECT, &MFCMain::MenuEditCreate)
 	ON_COMMAND(ID_BUTTON40014, &MFCMain::PasteSelected)
 	ON_COMMAND(ID_MODES_NORMAL, &MFCMain::NormalMode)
 	ON_COMMAND(ID_MODES_TRANSLATE, &MFCMain::TranslateMode)
@@ -116,6 +117,17 @@ void MFCMain::ToolBarButton1()
 void MFCMain::PasteSelected()
 {
 	m_ToolSystem.addNewObject();
+}
+
+void MFCMain::MenuEditCreate()
+{
+	//SelectDialogue m_ToolSelectDialogue(NULL, &m_ToolSystem.m_sceneGraph);		//create our dialoguebox //modal constructor
+	//m_ToolCreateDialogue.DoModal();	// start it up modal
+
+	//modeless dialogue must be declared in the class.   If we do local it will go out of scope instantly and destroy itself
+	m_ToolCreateDialogue.Create(IDD_DIALOG2);	//Start up modeless
+	m_ToolCreateDialogue.ShowWindow(SW_SHOW);	//show modeless
+	//m_ToolCreateDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject);
 }
 
 //switch the mode in toolMain
