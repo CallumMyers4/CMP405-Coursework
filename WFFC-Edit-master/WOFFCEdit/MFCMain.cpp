@@ -5,6 +5,7 @@
 BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_QUIT,	&MFCMain::MenuFileQuit)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
+	ON_COMMAND(ID_FILE_CAMERASETTINGS, &MFCMain::MenuFileCameraControls)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
 	ON_COMMAND(ID_EDIT_CREATEOBJECT, &MFCMain::MenuEditCreate)
 	ON_COMMAND(ID_BUTTON40014, &MFCMain::PasteSelected)
@@ -95,6 +96,13 @@ void MFCMain::MenuFileQuit()
 void MFCMain::MenuFileSaveTerrain()
 {
 	m_ToolSystem.onActionSaveTerrain();
+}
+
+void MFCMain::MenuFileCameraControls()
+{
+	m_ToolCameraDialogue.Create(IDD_DIALOG3);
+	m_ToolCameraDialogue.ShowWindow(SW_SHOW);
+	m_ToolCameraDialogue.SetFields(&m_ToolSystem);
 }
 
 void MFCMain::MenuEditSelect()

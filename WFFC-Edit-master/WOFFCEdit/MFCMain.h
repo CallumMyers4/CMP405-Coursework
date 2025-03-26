@@ -10,6 +10,7 @@
 #include "MFCFrame.h"
 #include "SelectDialogue.h"
 #include "CreateDialogue.h"
+#include "CameraDialogue.h"
 
 
 class MFCMain : public CWinApp 
@@ -28,12 +29,14 @@ private:
 	CRect WindowRECT;	//Window area rectangle. 
 	SelectDialogue m_ToolSelectDialogue;			//for modeless dialogue, declare it here
 	CreateDialogue m_ToolCreateDialogue;			//for modeless dialogue, declare it here
+	CameraDialogue m_ToolCameraDialogue;			//for modeless dialogue, declare it here
 	int m_width;		
 	int m_height;
 	
 	//Interface funtions for menu and toolbar etc requires
 	afx_msg void MenuFileQuit();
 	afx_msg void MenuFileSaveTerrain();
+	afx_msg void MenuFileCameraControls();
 	afx_msg void MenuEditSelect();
 	afx_msg	void ToolBarButton1();
 	afx_msg void PasteSelected();

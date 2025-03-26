@@ -166,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraDialogue.cpp" />
     <ClCompile Include="ChunkObject.cpp" />
     <ClCompile Include="CreateDialogue.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
@@ -184,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraDialogue.h" />
     <ClInclude Include="ChunkObject.h" />
     <ClInclude Include="CreateDialogue.h" />
     <ClInclude Include="DeviceResources.h" />
