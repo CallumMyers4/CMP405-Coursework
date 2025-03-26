@@ -44,18 +44,23 @@ void Camera::Update(InputCommands& Input)
 		inputs = Input;	//get reference to inputs (for WASD and mouse)
 
 		//if in the mode to move the camera, allow inputs (prevents focus camera being moved)
-		if (Input.currentMode == InputCommands::Modes::normal)
 		{
 			//code for the standard camera
 			if (!focused)
 			{
-				MoveCamera();
-				//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
-				//when not rotating the camera
-				if (inputs.rightMouseDown)
-					RotateCamera();
-				else
-					cameraStart = true;
+				//locks camera in place when holding control (to prevent moving camera when trying to move objects)
+				if (!inputs.ctrl)
+				{
+					MoveCamera();
+					//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
+					//when not rotating the camera
+					if (inputs.rightMouseDown)
+					{
+						RotateCamera();
+					}
+					else
+						cameraStart = true;
+				}
 
 				//update lookat point
 				lookAt = position + lookDirection;
