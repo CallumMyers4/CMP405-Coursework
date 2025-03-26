@@ -63,6 +63,9 @@ void Game::Initialize(HWND window, int width, int height)
 	mainCamera.Initialise();
 	focusCamera.Initialise();
 
+    standardCamera.focused = false;
+    focusCamera.focused = true;
+
     wind = window;
 
 #ifdef DXTK_AUDIO
@@ -152,6 +155,8 @@ void Game::Update(DX::StepTimer const& timer)
     //calls the FocusObject() function in camera.cpp
     else if (focusCamera.cameraActive)
     {
+        focusCamera.Update(m_InputCommands);
+
         mainCamera.position = focusCamera.position;
         mainCamera.view = focusCamera.view;
 

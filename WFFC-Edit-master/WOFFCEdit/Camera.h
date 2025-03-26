@@ -26,17 +26,19 @@ public:
 	DirectX::SimpleMath::Vector3 camUp;
 
 	DirectX::SimpleMath::Matrix view;	//view calculation
-	bool cameraActive = false;		//decide if this camera is in use
+	bool cameraActive = false, focused = false;		//decide if this camera is in use, adn whether it is the focus camera
 
 private:
 	//internal functions
 	void RotateCamera();
 	void MoveCamera();
-	float sensitivity = 0.5f, moveSpeed = 1.5f;		//------------------------------------------------------ADD THIS TO A DIALOGUE WINDOW----------------------------------
+	void ArcballCamera();
+	float sensitivity = 0.5f, arcballSensitivy = 0.005f, moveSpeed = 1.5f;		//------------------------------------------------------ADD THIS TO A DIALOGUE WINDOW----------------------------------
 
 	//internal vars
 	float prevMouseX, prevMouseY;	//where to compare the mouse's current pos to when moving, usually the position last frame
 	bool cameraStart = true;	//whether or not the camera has just started moving (i.e. when the mouse button is first clicked)
 	DirectX::SimpleMath::Vector3 objectOffset{ 2, 1, -3 };		//how far from the focus object to move the camera
+	DirectX::SimpleMath::Vector3 focusPosition{ 0, 0, 0 };		//the position of the object bing focused on
 	InputCommands inputs;	//reference to input commands (when mouse/kb is pressed)
 };

@@ -45,20 +45,40 @@ void Camera::Update(InputCommands& Input)
 
 		//if in the mode to move the camera, allow inputs (prevents focus camera being moved)
 		if (Input.currentMode == InputCommands::Modes::normal)
-			MoveCamera();
+		{
+			//code for the standard camera
+			if (!focused)
+			{
+				MoveCamera();
+				//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
+				//when not rotating the camera
+				if (inputs.rightMouseDown)
+					RotateCamera();
+				else
+					cameraStart = true;
 
-		//rotate if pushing right mouse button, otherwise tell program to reset camera center to mouse pos next time its pressed (prevent snapping if user moves the mouse
-		//when not rotating the camera
-		if (inputs.rightMouseDown)
-			RotateCamera();
-		else
-			cameraStart = true;
+				//update lookat point
+				lookAt = position + lookDirection;
 
-		//update lookat point
-		lookAt = position + lookDirection;
+				//apply camera vectors
+				view = DirectX::SimpleMath::Matrix::CreateLookAt(position, lookAt, DirectX::SimpleMath::Vector3::UnitY);
+			}
+			//code for the focused camera (same code, just a different rotation function)
+			else
+			{
+				if (inputs.rightMouseDown)
+					ArcballCamera();
+				else
+					cameraStart = true;
 
-		//apply camera vectors
-		view = DirectX::SimpleMath::Matrix::CreateLookAt(position, lookAt, DirectX::SimpleMath::Vector3::UnitY);
+
+				//update lookat point
+				lookAt = position + lookDirection;
+
+				//apply camera vectors
+				view = DirectX::SimpleMath::Matrix::CreateLookAt(position, lookAt, DirectX::SimpleMath::Vector3::UnitY);
+			}
+		}
 	}
 }
 
@@ -67,6 +87,52 @@ void Camera::MoveCamera()
 	position += (inputs.right - inputs.left) * moveSpeed * camRight;
 	position.y += (inputs.up - inputs.down) * moveSpeed;
 	position += (inputs.forward - inputs.back) * moveSpeed * lookDirection;
+}
+
+void Camera::ArcballCamera()
+{
+	//https://asliceofrendering.com/camera/2019/11/30/ArcballCamera/
+
+	//recenter camera around mouse if it has been moved without the camera being rotated 
+	//(i.e. if moved to the right since last rotation, the camera would snap right without this)
+	if (cameraStart)
+	{
+		prevMouseX = inputs.mouseX;
+		prevMouseY = inputs.mouseY;
+		cameraStart = false;
+		return;
+	}
+
+	//work out movement based on where mouse was last frame compared to now
+	float deltaX = (inputs.mouseX - prevMouseX) * arcballSensitivy;
+	float deltaY = (inputs.mouseY - prevMouseY) * arcballSensitivy;
+
+	//make this mouse pos the prev for next frame
+	prevMouseX = inputs.mouseX;
+	prevMouseY = inputs.mouseY;
+
+	//change yaw and pitch
+	orientation.y += deltaX; //yaw (side)
+	orientation.x -= deltaY; //pitch (up)
+
+	//clamp to stop from flipping (>90 would flip camera)
+	orientation.x = (std::max)(-89.0f, (std::min)(orientation.x, 89.0f));
+
+	//x axis rotation
+	DirectX::SimpleMath::Matrix rotationMatrixX = DirectX::SimpleMath::Matrix::CreateFromAxisAngle(DirectX::SimpleMath::Vector3::UnitY, deltaX);
+	position = DirectX::SimpleMath::Vector3::Transform(position - focusPosition, rotationMatrixX) + focusPosition;
+
+	//y axis rotation
+	DirectX::SimpleMath::Matrix rotationMatrixY = DirectX::SimpleMath::Matrix::CreateFromAxisAngle(camRight, deltaY);
+	position = DirectX::SimpleMath::Vector3::Transform(position - focusPosition, rotationMatrixY) + focusPosition;
+
+	//keep looking at the focus object
+	lookDirection = focusPosition - position;
+	lookDirection.Normalize();
+
+	//change right vec
+	lookDirection.Cross(DirectX::SimpleMath::Vector3::UnitY, camRight);
+	camRight.Normalize();
 }
 
 void Camera::RotateCamera()
@@ -103,15 +169,17 @@ void Camera::RotateCamera()
 
 	//change right vec
 	lookDirection.Cross(DirectX::SimpleMath::Vector3::UnitY, camRight);
+	camRight.Normalize();
 }
 
 void Camera::FocusOnObject(DirectX::SimpleMath::Vector3 focus)
 {
+	focusPosition = focus;
 	//move camera position to the objects position + the offset
-	position = focus + objectOffset;
+	position = focusPosition + objectOffset;
 
 	//set lookat to point towards the object
-	lookAt = focus;
+	lookAt = focusPosition;
 
 	//get the look direction by subtracting camera's position from the target
 	lookDirection = lookAt - position;
