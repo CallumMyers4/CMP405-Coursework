@@ -43,6 +43,9 @@ public: //methods
 	void Scale(DirectX::SimpleMath::Vector3 direction);		//scale object
 	DirectX::SimpleMath::Vector3 objectScaleDir{ 0, 0, 0 };	//axis to scale in
 
+	//set new camera vars (for the dialogue window)
+	void SetCameraVars(float speed, float standardRot, float arcballRot);
+
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
 	ChunkObject					m_chunk;		//our landscape chunk

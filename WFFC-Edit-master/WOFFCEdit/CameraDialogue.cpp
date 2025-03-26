@@ -58,6 +58,7 @@ void CameraDialogue::End()
 	standardRotSpeed = minStandard + (static_cast<float>(m_standardSlider.GetPos()) / 100) * (maxStandard - minStandard);
 	arcballRotSpeed = minArcball +  (static_cast<float>(m_arcballSlider.GetPos()) / 100) * (maxArcball - minArcball);
 
+	m_toolSystem->SetCameraVars(cameraMoveSpeed, standardRotSpeed, arcballRotSpeed);
 	DestroyWindow();	//destory the window properly.  INcluding the links and pointers created.  THis is so the dialogue can start again. 
 }
 

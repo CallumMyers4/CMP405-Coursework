@@ -84,6 +84,7 @@ public:
 
 	//empty camera which will store the variables of the camera currently active
 	Camera mainCamera;
+	void SetCameras(float speed, float standardRot, float arcballRot);		//pass over the new variables from window
 
 	//store all objects currently selected
 	std::vector<int> multiSelectObjIDs;

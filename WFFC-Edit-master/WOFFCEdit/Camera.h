@@ -28,12 +28,14 @@ public:
 	DirectX::SimpleMath::Matrix view;	//view calculation
 	bool cameraActive = false, focused = false;		//decide if this camera is in use, adn whether it is the focus camera
 
+	float sensitivity = 0.5f, arcballSensitivy = 0.005f, moveSpeed = 1.5f;		//rotation and movement speeds
+
+
 private:
 	//internal functions
 	void RotateCamera();
 	void MoveCamera();
 	void ArcballCamera();
-	float sensitivity = 0.5f, arcballSensitivy = 0.005f, moveSpeed = 1.5f;		//------------------------------------------------------ADD THIS TO A DIALOGUE WINDOW----------------------------------
 
 	//internal vars
 	float prevMouseX, prevMouseY;	//where to compare the mouse's current pos to when moving, usually the position last frame

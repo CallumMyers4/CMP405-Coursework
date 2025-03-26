@@ -469,7 +469,15 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
+void Game::SetCameras(float speed, float standardRot, float arcballRot)
+{
+    standardCamera.moveSpeed = speed;
+    standardCamera.sensitivity = standardRot;
+    focusCamera.arcballSensitivy = arcballRot;
+}
+
 #ifdef DXTK_AUDIO
+
 void Game::NewAudioDevice()
 {
     if (m_audEngine && !m_audEngine->IsAudioDevicePresent())

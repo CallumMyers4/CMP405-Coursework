@@ -629,3 +629,8 @@ void ToolMain::Scale(DirectX::SimpleMath::Vector3 direction)
 		}
 	}
 }
+
+void ToolMain::SetCameraVars(float speed, float standardRot, float arcballRot)
+{
+	m_d3dRenderer.SetCameras(speed, standardRot, arcballRot);
+}
