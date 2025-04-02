@@ -137,7 +137,7 @@ void Game::Update(DX::StepTimer const& timer)
     if (m_InputCommands.unfocus)   //if user presses the focus button again then go back to the normal camera
     {
         standardCamera.cameraActive = true;     //activate moving cam
-        focusCamera.cameraActive = false;       ////deactivate focus cam
+        focusCamera.cameraActive = false;       //deactivate focus cam
     }
 
     //if using the normal camera then allow user inputs, and set the main camera's view/pos to match standard camera
