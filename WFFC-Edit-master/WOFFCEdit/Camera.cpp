@@ -164,7 +164,7 @@ void Camera::RotateCamera()
 	orientation.y += deltaX; //yaw (side)
 	orientation.x -= deltaY; //pitch (up)
 
-	//clamp to stop from flipping (>90 would flip camera)
+	//clamp to stop from flipping (>90 would flip camera and invert controls)
 	orientation.x = (std::max)(-89.0f, (std::min)(orientation.x, 89.0f));
 
 	//use formula from wiki
@@ -180,6 +180,7 @@ void Camera::RotateCamera()
 void Camera::FocusOnObject(DirectX::SimpleMath::Vector3 focus)
 {
 	focusPosition = focus;
+
 	//move camera position to the objects position + the offset
 	position = focusPosition + objectOffset;
 
