@@ -448,10 +448,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		
 		m_displayList.push_back(newDisplayObject);
 		
-	}
-		
-		
-		
+	}		
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
