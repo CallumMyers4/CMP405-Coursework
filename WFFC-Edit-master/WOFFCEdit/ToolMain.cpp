@@ -220,6 +220,7 @@ void ToolMain::PasteObject()
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
 }
 
+//add a new object from the window
 void ToolMain::CreateNewObject(std::string model, std::string tex, 
 								DirectX::SimpleMath::Vector3 position, DirectX::SimpleMath::Vector3 scale, DirectX::SimpleMath::Vector3 rotation)
 {
@@ -249,6 +250,7 @@ void ToolMain::CreateNewObject(std::string model, std::string tex,
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//add to display
 }
 
+//remove an object from the scene
 void ToolMain::DeleteObject()
 {
 	int curID = 0;
@@ -550,11 +552,13 @@ void ToolMain::UpdateInput(MSG * msg)
 	m_toolInputCommands.deleteKeyHeld = m_keyArray[46];		//delete key should only fire once, this is a flag to check if held or pressed
 }
 
+//switch between modes
 void ToolMain::ChangeMode(InputCommands::Modes newMode)
 {
 	m_toolInputCommands.currentMode = newMode;
 }
 
+//move selected object(s) around the scene
 void ToolMain::Translate(DirectX::SimpleMath::Vector3 direction)
 {
 	int curID = 0;
@@ -579,6 +583,7 @@ void ToolMain::Translate(DirectX::SimpleMath::Vector3 direction)
 
 }
 
+//rotate selected object(s
 void ToolMain::Rotate(DirectX::SimpleMath::Vector3 direction)
 {
 	int curID = 0;
@@ -603,6 +608,7 @@ void ToolMain::Rotate(DirectX::SimpleMath::Vector3 direction)
 
 }
 
+//scale selected object(s)
 void ToolMain::Scale(DirectX::SimpleMath::Vector3 direction)
 {
 	int curID = 0;
@@ -630,6 +636,7 @@ void ToolMain::Scale(DirectX::SimpleMath::Vector3 direction)
 	}
 }
 
+//update variables in the camera class
 void ToolMain::SetCameraVars(float speed, float standardRot, float arcballRot)
 {
 	m_d3dRenderer.SetCameras(speed, standardRot, arcballRot);

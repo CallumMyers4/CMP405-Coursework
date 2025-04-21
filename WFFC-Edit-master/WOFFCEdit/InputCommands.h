@@ -2,6 +2,7 @@
 
 struct InputCommands
 {
+	//the mode the program is currently using
 	enum class Modes
 	{
 		normal = 1,

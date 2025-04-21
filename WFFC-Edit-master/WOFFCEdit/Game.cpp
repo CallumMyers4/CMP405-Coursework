@@ -466,6 +466,7 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
+//update camera classes when params are edited from the camera menu
 void Game::SetCameras(float speed, float standardRot, float arcballRot)
 {
     standardCamera.moveSpeed = speed;
@@ -709,9 +710,10 @@ int Game::MousePicking()
     return selectedID;      //return the ID of the current object
 }
 
+//moves objects around the display based on where they are in the scene graph (used for translate, rot and scale)
 void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
 {
-    DisplayObject& objInDisplay = m_displayList[objectID];   //get the object being displayed
+    DisplayObject& objInDisplay = m_displayList[objectID];   //get the object in display
     SceneObject& objInScene = sceneGraph->at(objectID);         //get the object in the world scene
 
     //match the object's scake in the display to match its scale in the world
@@ -731,6 +733,7 @@ void Game::UpdateDisplayList(int objectID, std::vector<SceneObject>* sceneGraph)
     selectedObject.position.z = objInDisplay.m_position.z = objInScene.posZ;
 }
 
+//get the change in mouse position each frane
 DirectX::SimpleMath::Vector2 Game::DragByMouse()
 {
     //calculate distance the mouse has moved since last frame

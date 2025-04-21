@@ -98,6 +98,7 @@ void MFCMain::MenuFileSaveTerrain()
 	m_ToolSystem.onActionSaveTerrain();
 }
 
+//control camera settings
 void MFCMain::MenuFileCameraControls()
 {
 	m_ToolCameraDialogue.Create(IDD_DIALOG3);
@@ -127,6 +128,7 @@ void MFCMain::PasteSelected()
 	m_ToolSystem.PasteObject();
 }
 
+//create a new object
 void MFCMain::MenuEditCreate()
 {
 	//SelectDialogue m_ToolSelectDialogue(NULL, &m_ToolSystem.m_sceneGraph);		//create our dialoguebox //modal constructor
@@ -135,7 +137,7 @@ void MFCMain::MenuEditCreate()
 	//modeless dialogue must be declared in the class.   If we do local it will go out of scope instantly and destroy itself
 	m_ToolCreateDialogue.Create(IDD_DIALOG2);	//Start up modeless
 	m_ToolCreateDialogue.ShowWindow(SW_SHOW);	//show modeless
-	m_ToolCreateDialogue.SetFields(&m_ToolSystem);
+	m_ToolCreateDialogue.SetFields(&m_ToolSystem);		//set default values
 }
 
 //switch the mode in toolMain

@@ -24,22 +24,24 @@ CameraDialogue::~CameraDialogue()
 {
 }
 
+//set defaults when window is opened
 void CameraDialogue::SetFields(ToolMain* toolMain)
 {
 	m_toolSystem = toolMain;		//reference to main
 
 	//set the min/max options for each slider
+	//then normalizes it to give a suitable value based on the min/max values in the code
 	m_speedSlider.SetRangeMin(0);
 	m_speedSlider.SetRangeMax(100);
 	m_speedSlider.SetPos(((cameraMoveSpeed - minSpeed) / (maxSpeed - minSpeed)) * 100);
 
 	m_standardSlider.SetRangeMin(0);
 	m_standardSlider.SetRangeMax(100);
-	m_standardSlider.SetPos(((standardRotSpeed - minStandard) / (maxStandard - minStandard)) * 100); // corrected here
+	m_standardSlider.SetPos(((standardRotSpeed - minStandard) / (maxStandard - minStandard)) * 100);
 
 	m_arcballSlider.SetRangeMin(0);
 	m_arcballSlider.SetRangeMax(100);
-	m_arcballSlider.SetPos(((arcballRotSpeed - minArcball) / (maxArcball - minArcball)) * 100); // corrected here
+	m_arcballSlider.SetPos(((arcballRotSpeed - minArcball) / (maxArcball - minArcball)) * 100);
 
 }
 
@@ -58,7 +60,7 @@ void CameraDialogue::End()
 	standardRotSpeed = minStandard + (static_cast<float>(m_standardSlider.GetPos()) / 100) * (maxStandard - minStandard);
 	arcballRotSpeed = minArcball +  (static_cast<float>(m_arcballSlider.GetPos()) / 100) * (maxArcball - minArcball);
 
-	m_toolSystem->SetCameraVars(cameraMoveSpeed, standardRotSpeed, arcballRotSpeed);
+	m_toolSystem->SetCameraVars(cameraMoveSpeed, standardRotSpeed, arcballRotSpeed);	//update in camera class
 	DestroyWindow();	//destory the window properly.  INcluding the links and pointers created.  THis is so the dialogue can start again. 
 }
 

@@ -31,6 +31,7 @@ DisplayObject::~DisplayObject()
 //	delete m_texture_diffuse;
 }
 
+//change the colour of an object
 void DisplayObject::ChangeColour(bool enable)
 {
 	//https://github.com/microsoft/DirectXTK/wiki/Rendering-a-model

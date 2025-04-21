@@ -79,6 +79,7 @@ void CreateDialogue::End()
 	DestroyWindow();	//destory the window properly.  INcluding the links and pointers created.  THis is so the dialogue can start again. 
 }
 
+//get the selected model from dropdown
 void CreateDialogue::SelectModel()
 {
 	int selection = m_modelComboBox.GetCurSel();
@@ -86,6 +87,7 @@ void CreateDialogue::SelectModel()
 	selectedModel = modelPaths[selection];
 }
 
+//get the selected tex from dropdown
 void CreateDialogue::SelectTexture()
 {
 	int selection = m_textureComboBox.GetCurSel();
@@ -93,10 +95,12 @@ void CreateDialogue::SelectTexture()
 	selectedTex = texturePaths[selection];
 }
 
+//make object from fields in the window
 void CreateDialogue::CreateObject()
 {
 	CString input;
 
+	//get values from input boxes
 	GetDlgItem(IDC_EDIT1)->GetWindowText(input);
 	position.x = _ttoi(input);
 	GetDlgItem(IDC_EDIT2)->GetWindowText(input);
