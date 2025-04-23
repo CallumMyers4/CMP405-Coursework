@@ -3,6 +3,8 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <algorithm> 
+#include <functional>
 
 //
 //ToolMain Class
@@ -255,6 +257,9 @@ void ToolMain::DeleteObject()
 {
 	int curID = 0;
 
+	//start from largest ID to prevent issues with scenegraph IDs changing whilst looping
+	std::sort(m_d3dRenderer.multiSelectObjIDs.begin(), m_d3dRenderer.multiSelectObjIDs.end(), std::greater<int>());
+
 	//delete all objects currently in the selection array
 	for (int i = 0; i < m_d3dRenderer.multiSelectObjIDs.size(); i++)
 	{
@@ -262,10 +267,14 @@ void ToolMain::DeleteObject()
 
 		//check to make sure it still exists (sometimes double clicking delete can cause problems)
 		if (curID < m_sceneGraph.size())
-			m_sceneGraph.erase(m_sceneGraph.begin() + m_d3dRenderer.selectedObject.selectedId);		//remove the object at the selected position
+		{
+			m_sceneGraph.erase(m_sceneGraph.begin() + curID);		//remove the object at the selected position
+		}
+
 	}
 
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);		//update display
+
 }
 
 void ToolMain::onActionSave()

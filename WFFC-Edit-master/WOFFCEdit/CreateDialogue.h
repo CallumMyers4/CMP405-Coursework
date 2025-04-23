@@ -37,7 +37,7 @@ class CreateDialogue : public CDialogEx
 			"database/data/placeholder.dds",		//placeholder
 			"database/data/Error.dds",				//error
 			"database/data/rock.dds",				//rock
-			"database/data/Tiny_skin.dds"			//tiny skin
+			"database/data/Tiny_skin.dds",			//tiny skin
 			"database/data/ceramic.dds"				//ceramic
 		};
 
